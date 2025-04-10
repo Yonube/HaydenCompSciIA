@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile JavaFX App",
+            "type": "shell",
+            "command": "javac",
+            "args": [
+                "-d",
+                "bin", // Output directory for compiled .class files
+                "-cp",
+                "/Users/haydenroberts/Documents/javafx-sdk-24/lib/*", // JavaFX SDK libraries
+                "src/**/*.java" // Your source files location
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$javac"
+            ],
+            "detail": "Compile the JavaFX project"
+        }
+    ]
+}
