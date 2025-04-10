@@ -10,7 +10,10 @@ import src.OOPBackEnd.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+
         // Create instances of RobotTeam
+
         RobotTeam Vector = new RobotTeam(8177, "Vector");
         RobotTeam Robonauts = new RobotTeam(118, "Robonauts");
         RobotTeam TexasTorque = new RobotTeam(1477, "TexasTorque");
@@ -22,10 +25,17 @@ public class Main {
         // Create instances of Matches
         Matches match1 = new Matches(1, AwtyBots, Vector, Robonauts, 100, TexasTorque, Valor, BlargleFish, 80);
 
-        // AwtyBots.displayTeamInfo();
+    
+        AwtyBots.displayTeamInfo();
 
         Scanner.determineRobotTeam(5829);
         Scanner.determineRobotTeam(2389);
 
+        System.out.println("Enter a long string of text: ");
+        Scanner.QRdataToRobotTeam(scanner.nextLine());
+
+        AwtyBots.displayTeamInfo();
+
+        scanner.close();
     }
 }

@@ -47,24 +47,35 @@ public class Scanner {
         Scanner.scannedData = scannedData;
     }
 
-    public void processScannedData(String inputFromQR) {
+    public static int getTeamNumber() {
+        return TeamNumber;
+    }
+
+    public static void QRdataToRobotTeam(String inputedddata) {
+        Scanner.processScannedData(inputedddata);
+        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+    }
+
+    public static void processScannedData(String inputFromQR) {
         // Process the scanned data and update the robot's state
         // For example, you might want to parse the scanned data and update the robot's
         // attributes
         System.out.println("Processing scanned data: ");
         // Split the scanned data into an array
         Scanner.setScannedData(inputFromQR.split("\t"));
-
+        System.out.println("Split data");
         // Get match number
         matchNumber = Integer.parseInt(getScannedData()[1]);
+        System.out.println(" Got Match Number");
 
         // Team Number
         TeamNumber = Integer.parseInt(getScannedData()[3]);
+        System.out.println("Got Team Number");
 
         // If No Show Adds to Missed Matches
-        if (getScannedData()[5].equals("true")) {
-            MissedMatches[matchNumber] = true;
-        }
+        // if (getScannedData()[5].equals("true")) {
+        // MissedMatches[matchNumber] = true;
+        // }
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
@@ -84,6 +95,7 @@ public class Scanner {
                         Integer.parseInt(getScannedData()[21]) +
                         // Teleop Coral L4
                         Integer.parseInt(getScannedData()[22]);
+        System.out.println("Got Coral Points");
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
@@ -94,38 +106,27 @@ public class Scanner {
                                 Integer.parseInt(getScannedData()[23]) +
                                 // Teleop Algae Processor
                                 Integer.parseInt(getScannedData()[24]));
+        System.out.println("Got Algae Points");
 
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;
+        System.out.println("Got Total Points");
 
     }
 
-    public void sendAllDataToTeam(RobotTeam team) {
+    public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
         team.addTotalPointsInMatch(Scanner.matchNumber, Scanner.TotalPoints);
         team.addTotalCoralPointsInMatch(Scanner.matchNumber, Scanner.TotalCoralPoints);
         team.addTotalAlgaePointsInMatch(Scanner.matchNumber, Scanner.TotalAlgaePoints);
     }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
     /**
      * @param teamNumber
      * @return RobotTeam
      */
-   
-   
-   
-   
-   
-     public static RobotTeam determineRobotTeam(int teamNumber) {
+
+    public static RobotTeam determineRobotTeam(int teamNumber) {
         // Determine the robot team based on the team number
         for (int i = 0; i < RobotTeam.AllTeams.length; i++) {
             if (RobotTeam.AllTeams[i] != null) {

@@ -38,6 +38,13 @@ public class RobotTeam {
     public RobotTeam(int TeamNumber, String TeamName) {
         this.TeamNumber = TeamNumber;
         this.TeamName = TeamName;
+
+        // Initialize arrays
+        this.TotalPointsInEachMatch = new int[90];
+        this.TotalCoralPointsInEachMatch = new int[90];
+        this.TotalAlgaePointsInEachMatch = new int[90];
+        this.MissedMatches = new boolean[90];
+
         for (int i = 0; i < AllTeams.length; i++) {
             if (AllTeams[i] == null) { // Assuming 0 indicates an empty index
                 AllTeams[i] = this; // Assign the team number to the first empty index
@@ -97,6 +104,9 @@ public class RobotTeam {
     }
 
     public int getTotalCoralPoints() {
+        for (int i = 0; i < TotalCoralPointsInEachMatch.length; i++) {
+            TotalCoralPoints += TotalCoralPointsInEachMatch[i];
+        }
         return TotalCoralPoints;
     }
 
@@ -105,6 +115,9 @@ public class RobotTeam {
     }
 
     public int getTotalAlgaePoints() {
+        for (int i = 0; i < TotalAlgaePointsInEachMatch.length; i++) {
+            TotalAlgaePoints += TotalAlgaePointsInEachMatch[i];
+        }
         return TotalAlgaePoints;
     }
 
@@ -113,6 +126,9 @@ public class RobotTeam {
     }
 
     public int getTotalPoints() {
+        for (int i = 0; i < TotalPointsInEachMatch.length; i++) {
+            TotalPoints += TotalPointsInEachMatch[i];
+        }
         return TotalPoints;
     }
 
@@ -289,17 +305,17 @@ public class RobotTeam {
     }
 
     public void displayTeamInfo() {
-        System.out.println("Team Number: " + TeamNumber);
-        System.out.println("Team Name: " + TeamName);
-        System.out.println("Wins: " + Wins);
-        System.out.println("Losses: " + Losses);
-        System.out.println("Draws: " + Draws);
-        System.out.println("Total Matches Played: " + TotalMatchesPlayed);
-        System.out.println("Total Points: " + TotalPoints);
-        System.out.println("Total Coral Points: " + TotalCoralPoints);
-        System.out.println("Total Algae Points: " + TotalAlgaePoints);
-        System.out.println("Breakdowns: " + Breakdowns);
-        System.out.println("Stuck Game Pieces: " + StuckGamePieces);
+        System.out.println("Team Number: " + getTeamNumber());
+        System.out.println("Team Name: " + getTeamName());
+        System.out.println("Wins: " + getWins());
+        System.out.println("Losses: " + getLosses());
+        System.out.println("Draws: " + getDraws());
+        System.out.println("Total Matches Played: " + getTotalMatchesPlayed());
+        System.out.println("Total Points: " + getTotalPoints());
+        System.out.println("Total Coral Points: " + getTotalCoralPoints());
+        System.out.println("Total Algae Points: " + getTotalAlgaePoints());
+        System.out.println("Breakdowns: " + getBreakdowns());
+        System.out.println("Stuck Game Pieces: " + getStuckGamePieces());
     }
     //
 
