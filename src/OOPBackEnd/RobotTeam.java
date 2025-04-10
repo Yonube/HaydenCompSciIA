@@ -1,20 +1,23 @@
-package src.OOPData;
+package src.OOPBackEnd;
+
 public class RobotTeam {
-    // Class fields and methods will go here
+    // Statics
+    public static RobotTeam[] AllTeams = new RobotTeam[90];
+
     private int TeamNumber;
     private String TeamName;
-    
+
     private int Wins;
     private int Losses;
     private int Draws;
     private int TotalMatchesPlayed;
-    //Numerical Performance In Matches
+    // Numerical Performance In Matches
     private int[] TotalPointsInEachMatch;
     private int[] TotalCoralPointsInEachMatch;
     private int[] TotalAlgaePointsInEachMatch;
-    
-    
+
     private int Breakdowns;
+    private boolean[] MissedMatches;
     private int StuckGamePieces;
     private int TotalCoralPoints;
     private int TotalAlgaePoints;
@@ -35,6 +38,12 @@ public class RobotTeam {
     public RobotTeam(int TeamNumber, String TeamName) {
         this.TeamNumber = TeamNumber;
         this.TeamName = TeamName;
+        for (int i = 0; i < AllTeams.length; i++) {
+            if (AllTeams[i] == null) { // Assuming 0 indicates an empty index
+                AllTeams[i] = this; // Assign the team number to the first empty index
+                break; // Exit the loop after filling the first empty index
+            }
+        }
         // Constructor for RobotTeam
     }
 
@@ -151,6 +160,18 @@ public class RobotTeam {
         TotalPointsInEachMatch[matchNumber] = points;
     }
 
+    public boolean[] getMissedMatches() {
+        return MissedMatches;
+    }
+
+    public void setMissedMatches(boolean[] missedMatches) {
+        MissedMatches = missedMatches;
+    }
+
+    public RobotTeam[] getAllTeams() {
+        return AllTeams;
+    }
+
     public boolean hasAuton() {
         return HasAuton;
     }
@@ -263,10 +284,8 @@ public class RobotTeam {
         TotalAlgaePointsInEachMatch[matchNumber] = points;
     }
 
-    public void addTotalPointsInMatch(int matchNumber, int TotalCoralPointsInEachMatch[],
-            int TotalAlgaePointsInEachMatch[]) {
-        TotalPointsInEachMatch[matchNumber] = TotalCoralPointsInEachMatch[matchNumber]
-                + TotalAlgaePointsInEachMatch[matchNumber];
+    public void addTotalPointsInMatch(int matchNumber, int points) {
+        TotalPointsInEachMatch[matchNumber] = points;
     }
 
     public void displayTeamInfo() {
@@ -282,4 +301,10 @@ public class RobotTeam {
         System.out.println("Breakdowns: " + Breakdowns);
         System.out.println("Stuck Game Pieces: " + StuckGamePieces);
     }
+    //
+
+    // this. = Boolean.parseBoolean(ToBeSortedData[4]);
+
 }
+
+// Common Starting Position

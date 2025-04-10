@@ -1,4 +1,4 @@
-package src.OOPData;
+package src.OOPBackEnd;
 
 public class Matches {
     private static int numberOfMatchesPlayed = 0;
@@ -7,30 +7,22 @@ public class Matches {
     private RobotTeam Blue2;
     private RobotTeam Blue3;
     private int BlueScore;
-    private int BlueRankingPoints;
     private RobotTeam Red1;
     private RobotTeam Red2;
     private RobotTeam Red3;
     private int RedScore;
-    private int RedRankingPoints;
-    // private int team1Contribution;
-    // private int team2Contribution;
-    // private int team3Contribution;
 
     public Matches(int matchNumber, RobotTeam Blue1, RobotTeam Blue2, RobotTeam Blue3, int BlueScore,
-            int BlueRankingPoints,
-            RobotTeam Red1, RobotTeam Red2, RobotTeam Red3, int RedScore, int RedRankingPoints) {
+            RobotTeam Red1, RobotTeam Red2, RobotTeam Red3, int RedScore) {
         this.matchNumber = matchNumber;
         this.Blue1 = Blue1;
         this.Blue2 = Blue2;
         this.Blue3 = Blue3;
         this.BlueScore = BlueScore;
-        this.BlueRankingPoints = BlueRankingPoints;
         this.Red1 = Red1;
         this.Red2 = Red2;
         this.Red3 = Red3;
         this.RedScore = RedScore;
-        this.RedRankingPoints = RedRankingPoints;
         numberOfMatchesPlayed++;
     }
 
@@ -74,14 +66,6 @@ public class Matches {
         this.BlueScore = BlueScore;
     }
 
-    public int getBlueRankingPoints() {
-        return BlueRankingPoints;
-    }
-
-    public void setBlueRankingPoints(int BlueRankingPoints) {
-        this.BlueRankingPoints = BlueRankingPoints;
-    }
-
     public RobotTeam getRed1() {
         return Red1;
     }
@@ -114,12 +98,12 @@ public class Matches {
         this.RedScore = RedScore;
     }
 
-    public int getRedRankingPoints() {
-        return RedRankingPoints;
+    public static int getNumberOfMatchesPlayed() {
+        return numberOfMatchesPlayed;
     }
 
-    public void setRedRankingPoints(int RedRankingPoints) {
-        this.RedRankingPoints = RedRankingPoints;
+    public static void setNumberOfMatchesPlayed(int numberOfMatchesPlayed) {
+        Matches.numberOfMatchesPlayed = numberOfMatchesPlayed;
     }
 
     // Action Commands
@@ -151,8 +135,5 @@ public class Matches {
         }
         // Update the total matches played
         numberOfMatchesPlayed++;
-
-        // Game Play Analysis
-        
     }
 }
