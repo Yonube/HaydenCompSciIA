@@ -11,7 +11,6 @@ public class Scanner {
     private static String[] scannedData = new String[35];
 
     private static int TeamNumber;
-    private static String TeamName;
 
     private static int Wins;
     private static int Losses;
@@ -81,37 +80,46 @@ public class Scanner {
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
-                Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L1]) +
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
                 // Auton Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L2]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
                         // Auton Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L3]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
                         // Auton Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L4]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
                         // Teleop Coral L1
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L1]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
                         // Teleop Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L2]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
                         // Teleop Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L3]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
                         // Teleop Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L4]);
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
-                Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_ALGAE_BARGE]) +
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
                 // Auton Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_ALGAE_PROCESSOR]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
                         // Teleop Algae Barge
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_ALGAE_BARGE]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
                         // Teleop Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_ALGAE_PROCESSOR]);
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
-
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;
         System.out.println("Got Total Points: " + TotalPoints);
+        // Can Remove Algae
+        if (getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeAuto()].equals("true") ||
+                getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeTeleop()].equals("true")) {
+            CanRemoveAlgae = true;
+        }
+        // Auton
+        if (getScannedData()[ConstantsForScanner.getMoved()] == "true") {
+            HasAuton = true;
+        }
+        // 
 
     }
 
@@ -119,10 +127,21 @@ public class Scanner {
         // Send all the data to the team
         team.addTotalPointsInMatch(Scanner.matchNumber, Scanner.TotalPoints);
         System.out.println("Got Total Points: " + TotalPoints);
+
         team.addTotalCoralPointsInMatch(Scanner.matchNumber, Scanner.TotalCoralPoints);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
+
         team.addTotalAlgaePointsInMatch(Scanner.matchNumber, Scanner.TotalAlgaePoints);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
+
+        team.setCanRemoveAlgae(CanRemoveAlgae);
+        System.out.println("Got Can Remove Algae: " + CanRemoveAlgae);
+
+        team.setHasAuton(HasAuton);
+        System.out.println("Got Has Auton: " + HasAuton);
+
+        
+
     }
 
     /**
@@ -159,7 +178,6 @@ public class Scanner {
             scannedData[i] = null;
         }
         TeamNumber = 0;
-        TeamName = null;
         Wins = 0;
         Losses = 0;
         Draws = 0;
