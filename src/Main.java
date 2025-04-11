@@ -1,9 +1,5 @@
 package src;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.RobotTeam;
 import src.OOPBackEnd.Scanner;
@@ -25,16 +21,20 @@ public class Main {
         // Create instances of Matches
         Matches match1 = new Matches(1, AwtyBots, Vector, Robonauts, 100, TexasTorque, Valor, BlargleFish, 80);
 
-    
         AwtyBots.displayTeamInfo();
 
         Scanner.determineRobotTeam(5829);
         Scanner.determineRobotTeam(2389);
 
-        System.out.println("Enter a long string of text: ");
-        Scanner.QRdataToRobotTeam(scanner.nextLine());
-
-        AwtyBots.displayTeamInfo();
+        while (true) {
+            System.out.println("Input Data From QR Scout (type 'clear' to exit): ");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("clear")) {
+            break;
+            }
+            Scanner.QRdataToRobotTeam(input);
+            AwtyBots.displayTeamInfo();
+        }
 
         scanner.close();
     }

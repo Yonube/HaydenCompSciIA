@@ -1,5 +1,6 @@
 package src.OOPBackEnd;
 
+import src.OOPBackEnd.ConstantsForScanner;
 import javafx.scene.robot.Robot;
 
 public class Scanner {
@@ -54,6 +55,7 @@ public class Scanner {
     public static void QRdataToRobotTeam(String inputedddata) {
         Scanner.processScannedData(inputedddata);
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.clear();
     }
 
     public static void processScannedData(String inputFromQR) {
@@ -79,46 +81,48 @@ public class Scanner {
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
-                Integer.parseInt(getScannedData()[9]) +
+                Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L1]) +
                 // Auton Coral L2
-                        Integer.parseInt(getScannedData()[10] +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L2]) +
                         // Auton Coral L3
-                                Integer.parseInt(getScannedData()[11]) +
-                                // Auton Coral L4
-                                Integer.parseInt(getScannedData()[12]))
-                        +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L3]) +
+                        // Auton Coral L4
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_CORAL_L4]) +
                         // Teleop Coral L1
-                        Integer.parseInt(getScannedData()[19]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L1]) +
                         // Teleop Coral L2
-                        Integer.parseInt(getScannedData()[20]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L2]) +
                         // Teleop Coral L3
-                        Integer.parseInt(getScannedData()[21]) +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L3]) +
                         // Teleop Coral L4
-                        Integer.parseInt(getScannedData()[22]);
-        System.out.println("Got Coral Points");
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_CORAL_L4]);
+        System.out.println("Got Coral Points: " + TotalCoralPoints);
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
-                Integer.parseInt(getScannedData()[13]) +
+                Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_ALGAE_BARGE]) +
                 // Auton Algae Processor
-                        Integer.parseInt(getScannedData()[14] +
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.AUTON_ALGAE_PROCESSOR]) +
                         // Teleop Algae Barge
-                                Integer.parseInt(getScannedData()[23]) +
-                                // Teleop Algae Processor
-                                Integer.parseInt(getScannedData()[24]));
-        System.out.println("Got Algae Points");
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_ALGAE_BARGE]) +
+                        // Teleop Algae Processor
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.TELEOP_ALGAE_PROCESSOR]);
+        System.out.println("Got Algae Points: " + TotalAlgaePoints);
 
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;
-        System.out.println("Got Total Points");
+        System.out.println("Got Total Points: " + TotalPoints);
 
     }
 
     public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
         team.addTotalPointsInMatch(Scanner.matchNumber, Scanner.TotalPoints);
+        System.out.println("Got Total Points: " + TotalPoints);
         team.addTotalCoralPointsInMatch(Scanner.matchNumber, Scanner.TotalCoralPoints);
+        System.out.println("Got Coral Points: " + TotalCoralPoints);
         team.addTotalAlgaePointsInMatch(Scanner.matchNumber, Scanner.TotalAlgaePoints);
+        System.out.println("Got Algae Points: " + TotalAlgaePoints);
     }
 
     /**
