@@ -149,4 +149,25 @@ public class Scanner {
 
     // if the robot team is not in the directory, then create a new one
 
+    public static void clear() {
+        // Clear the scanned data
+        for (int i = 0; i < scannedData.length; i++) {
+            scannedData[i] = null;
+        }
+        TeamNumber = 0;
+        TeamName = null;
+        Wins = 0;
+        Losses = 0;
+        Draws = 0;
+        TotalMatchesPlayed = 0;
+        matchNumber = 0;
+
+        Breakdown = 0;
+        MissedMatches = null;
+        StuckGamePieces = 0;
+        TotalCoralPoints = 0;
+        TotalAlgaePoints = 0;
+        TotalPoints = 0;
+    }
+
 }
