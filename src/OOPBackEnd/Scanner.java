@@ -1,7 +1,6 @@
 package src.OOPBackEnd;
 
 import src.OOPBackEnd.ConstantsForScanner;
-import javafx.scene.robot.Robot;
 
 public class Scanner {
     // Scanner class to read input from the QR Code
@@ -33,6 +32,9 @@ public class Scanner {
     private static boolean CanRemoveAlgae;
     private static boolean CanDefend;
 
+    // Extras
+    private static String comments;
+
     public Scanner() {
         // Constructor for Scanner
         // Initialize the scanned data array
@@ -53,8 +55,10 @@ public class Scanner {
 
     public static void QRdataToRobotTeam(String inputedddata) {
         Scanner.processScannedData(inputedddata);
-        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
-        Scanner.clear();
+        if (Scanner.checkIfMatchDataExists(Scanner.getScannedData()[ConstantsForScanner.getMatchNumber()])) {
+            Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+            Scanner.clear();
+        }
     }
 
     public static void processScannedData(String inputFromQR) {
@@ -119,7 +123,16 @@ public class Scanner {
         if (getScannedData()[ConstantsForScanner.getMoved()] == "true") {
             HasAuton = true;
         }
-        // 
+        // Comments
+        if (getScannedData().length < 35) {
+            System.out.println("Error: Scanned data is incomplete or no comments provided.");
+            return;
+        } else {
+            if (getScannedData()[ConstantsForScanner.getComments()] != null) {
+                comments = getScannedData()[ConstantsForScanner.getComments()];
+                System.out.println("Got Comments: " + comments);
+            }
+        }
 
     }
 
@@ -140,8 +153,29 @@ public class Scanner {
         team.setHasAuton(HasAuton);
         System.out.println("Got Has Auton: " + HasAuton);
 
-        
+        team.setNotes(comments, matchNumber);
+        System.out.println("Got Comments: " + comments);
 
+    }
+
+    public static void sendDataToMatches(Matches match) {
+        // Send all the data to the match
+        if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("R1")) {
+            match.setRed1(Scanner.determineRobotTeam(TeamNumber));
+        }
+
+    }
+
+    public static boolean checkIfMatchDataExists(int MatchNumber) {
+        // Check if the match data exists in any of the matches
+        for (Matches match : Matches.getAllMatches()) {
+            if (match.getMatchNumber() == MatchNumber) {
+                System.out.println("Match data exists for match number: " + MatchNumber);
+                return true;
+            }
+        }
+        System.out.println("No match data exists for match number: " + MatchNumber);
+        return false;
     }
 
     /**

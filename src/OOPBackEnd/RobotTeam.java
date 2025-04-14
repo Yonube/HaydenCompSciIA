@@ -32,13 +32,13 @@ public class RobotTeam {
     private boolean CanDefend;
 
     // Other Things that may be useful
-    private String Notes;
+    private String[] Notes;
     // private Image TeamImage;
 
     public RobotTeam(int TeamNumber, String TeamName) {
         this.TeamNumber = TeamNumber;
         this.TeamName = TeamName;
-
+        this.Notes = new String[12]; // Assuming 12 matches
         // Initialize arrays
         this.TotalPointsInEachMatch = new int[90];
         this.TotalCoralPointsInEachMatch = new int[90];
@@ -236,12 +236,29 @@ public class RobotTeam {
         CanDefend = canDefend;
     }
 
-    public String getNotes() {
+    public String[] getNotes() {
         return Notes;
     }
 
-    public void setNotes(String notes) {
-        Notes = notes;
+    public void setNotes(String notes, int matchNumber) {
+        for (int i = 0; i < Notes.length; i++) {
+            if (Notes[i] == null && notes != null) {
+                Notes[i] = "Match " + matchNumber + " Notes: " + notes;
+                break;
+            }
+        }
+    }
+
+    public void checkNotes() {
+        for (int i = 0; i < Notes.length; i++) {
+            if (Notes[0] == null) {
+                System.out.println("No notes available.");
+                break;
+            } else if (Notes[i] != null) {
+                System.out.println(Notes[i]);
+            }
+        }
+
     }
 
     // Action Commands
@@ -286,10 +303,6 @@ public class RobotTeam {
 
     public void addRemoveAlgae() {
         CanRemoveAlgae = true;
-    }
-
-    public void addNotes(String notes) {
-        Notes = notes;
     }
 
     public void addTotalCoralPointsInMatch(int matchNumber, int points) {

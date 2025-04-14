@@ -177,5 +177,6 @@ public class ConstantsForScanner {
     public static int getComments() {
         return COMMENTS;
     }
+    
 
 }

@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MainCopy",
+            "request": "launch",
+            "mainClass": "src.MainCopy",
+            "projectName": "HaydenCompSciIA_e92b7e81"
+        },
+        {
+            "type": "java",
             "name": "mainapp",
             "request": "launch",
             "mainClass": "src.JavaFXGUI.mainapp",

@@ -34,6 +34,7 @@ public class Main {
             }
             Scanner.QRdataToRobotTeam(input);
             AwtyBots.displayTeamInfo();
+            AwtyBots.checkNotes();
         }
 
         scanner.close();
