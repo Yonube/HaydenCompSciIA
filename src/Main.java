@@ -13,7 +13,7 @@ public class Main {
         RobotTeam Vector = new RobotTeam(8177, "Vector");
         RobotTeam Robonauts = new RobotTeam(118, "Robonauts");
         RobotTeam TexasTorque = new RobotTeam(1477, "TexasTorque");
-        RobotTeam Valor = new RobotTeam(3008, "Valor");
+        RobotTeam Valor = new RobotTeam(6800, "Valor");
         RobotTeam AwtyBots = new RobotTeam(5829, "AwtyBots");
         RobotTeam BlargleFish = new RobotTeam(6969, "BlargleFish");
 
@@ -38,5 +38,36 @@ public class Main {
         }
 
         scanner.close();
+
+        /**
+         * Performs a binary search on a sorted array of integers.
+         *
+         * @param arr The sorted array to search.
+         * @param target The value to search for.
+         * @return The index of the target if found, otherwise -1.
+         */
+        // public static int binarySearch(int[] arr, int target) {
+        //     int left = 0;
+        //     int right = arr.length - 1;
+
+        //     while (left <= right) {
+        //         int mid = left + (right - left) / 2;
+
+        //         // Check if the target is at mid
+        //         if (arr[mid] == target) {
+        //             return mid;
+        //         }
+
+        //         // If target is greater, ignore the left half
+        //         if (arr[mid] < target) {
+        //             left = mid + 1;
+        //         } else {
+        //             // If target is smaller, ignore the right half
+        //             right = mid - 1;
+        //         }
+        //     }
+
+            // Target not found
+          //  return -1;
+        }
     }
-}
