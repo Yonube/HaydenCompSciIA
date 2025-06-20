@@ -1,5 +1,7 @@
 package src.JavaFXGUI;
 import src.OOPBackEnd.RobotTeam;
+import src.JavaFXGUI.driveTeamGUI;
+import src.OOPBackEnd.Scanner;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +19,7 @@ public class mainapp implements ActionListener {
 	private static int failedAttempts = 0; // counter for failed attempts
     private static JLabel titleLabel;
 
-	public static void main(String[] args) {
+	public static void showMainAppGUI() {
 
 		frame = new JFrame();
 		panel = new JPanel();
@@ -32,44 +34,59 @@ public class mainapp implements ActionListener {
         titleLabel.setBounds(600, 10, 400, 30);
         panel.add(titleLabel);
 
-		userLabel = new JLabel("User");
-		userLabel.setBounds(10, 20, 80, 25);
-		panel.add(userLabel);
+		// Create a scrollable panel for robot teams
+		JPanel robotTeamsPanel = new JPanel();
+		robotTeamsPanel.setLayout(new BoxLayout(robotTeamsPanel, BoxLayout.Y_AXIS));
+		robotTeamsPanel.setBounds(1200, 50, 300, 500); // Position on the right side
+		robotTeamsPanel.setBorder(BorderFactory.createTitledBorder("Robot Teams"));
 
-		userText = new JTextField();
-		userText.setBounds(100, 20, 165, 25);
-		panel.add(userText);
+		// Create a JScrollPane to make the panel scrollable
+		JScrollPane scrollPane = new JScrollPane(robotTeamsPanel);
+		scrollPane.setBounds(1200, 50, 300, 500);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		panel.add(scrollPane);
 
-		passwordLabel = new JLabel("Log Stats:");
-		passwordLabel.setBounds(10, 50, 80, 25);
-		panel.add(passwordLabel);
+		// Add labels for each robot team
+		for (String teamName : RobotTeam.getAllTeamNames()) { // Assuming RobotTeam has a method to get all team names
+			// Create a button for each team
+			JButton teamButton = new JButton(teamName);
+			teamButton.setFont(new Font("Arial", Font.PLAIN, 16));
+			robotTeamsPanel.add(teamButton);
+			teamButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Close the current frame
+                RobotTeamGUI robotTeamGUI = new RobotTeamGUI(Scanner.determineRobotTeam(teamName)); // Assuming RobotTeam has a method to get a team by name
+            }
+        });
+		}
 
-		passwordText = new JPasswordField();
-		passwordText.setBounds(100, 50, 165, 25);
-		panel.add(passwordText);
+		// userLabel = new JLabel("User");
+		// userLabel.setBounds(10, 20, 80, 25);
+		// panel.add(userLabel);
 
-		button = new JButton("Login");
-		button.setBounds(10, 80, 80, 25);
-		button.addActionListener(new mainapp());
-		panel.add(button);
+		// userText = new JTextField();
+		// userText.setBounds(100, 20, 165, 25);
+		// panel.add(userText);
 
-		success = new JLabel("");
-		success.setBounds(10, 110, 300, 25);
-		panel.add(success);
+		// passwordLabel = new JLabel("Log Stats:");
+		// passwordLabel.setBounds(10, 50, 80, 25);
+		// panel.add(passwordLabel);
+
+		// passwordText = new JPasswordField();
+		// passwordText.setBounds(100, 50, 165, 25);
+		// panel.add(passwordText);
+
+		// button = new JButton("Login");
+		// button.setBounds(10, 80, 80, 25);
+		// button.addActionListener(new mainapp());
+		// panel.add(button);
 
 		frame.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String user = userText.getText();
-		String password = new String(passwordText.getPassword());
-
-		if (user.equals("Hayden") && password.equals("Hayden")) {
-			success.setText("Login successful after " + failedAttempts + " failed attempt(s).");
-		} else {
-			failedAttempts++;
-			success.setText("Login failed. Attempts: " + failedAttempts);
-		}
+		// No operation needed here; consider adding relevant logic if required
 	}
 }

@@ -53,12 +53,25 @@ public class Scanner {
         return TeamNumber;
     }
 
+    public static boolean doesMatchDataExist(int MatchNumber) {
+        // Check if the match data exists in any of the matches
+        for (Matches match : Matches.getAllMatches()) {
+            if (match == null) {
+                continue; // Skip null matches
+            }
+            if (match.getMatchNumber() == MatchNumber) {
+                System.out.println("Match data exists for match number: " + MatchNumber);
+                return true;
+            }
+        }
+        System.out.println("No match data exists for match number: " + MatchNumber);
+        return false;
+    }
+
     public static void QRdataToRobotTeam(String inputedddata) {
         Scanner.processScannedData(inputedddata);
-        if (Scanner.checkIfMatchDataExists(Scanner.getScannedData()[ConstantsForScanner.getMatchNumber()])) {
-            Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
-            Scanner.clear();
-        }
+        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.clear();
     }
 
     public static void processScannedData(String inputFromQR) {
@@ -188,6 +201,21 @@ public class Scanner {
         for (int i = 0; i < RobotTeam.AllTeams.length; i++) {
             if (RobotTeam.AllTeams[i] != null) {
                 if (RobotTeam.AllTeams[i].getTeamNumber() == teamNumber) {
+                    System.out.println(
+                            "Team " + RobotTeam.AllTeams[i].getTeamName() + " found in the directory at index " + i);
+                    return RobotTeam.AllTeams[i];
+                }
+            }
+        }
+        System.out.println("Team not found in the directory.");
+        return null;
+    }
+
+    public static RobotTeam determineRobotTeam(String teamName) {
+        // Determine the robot team based on the team number
+        for (int i = 0; i < RobotTeam.AllTeams.length; i++) {
+            if (RobotTeam.AllTeams[i] != null) {
+                if (RobotTeam.AllTeams[i].getTeamName() == teamName) {
                     System.out.println(
                             "Team " + RobotTeam.AllTeams[i].getTeamName() + " found in the directory at index " + i);
                     return RobotTeam.AllTeams[i];

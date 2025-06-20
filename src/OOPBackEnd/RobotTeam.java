@@ -261,6 +261,17 @@ public class RobotTeam {
 
     }
 
+    public static String[] getAllTeamNames() {
+				String[] teamNames = new String[AllTeams.length];
+                int index = 0;
+                for (RobotTeam team : AllTeams) { // Assuming AllTeams is a collection of RobotTeam objects
+                    if (team != null) { // Ensure the team is not null
+                        teamNames[index++] = team.getTeamName(); // Assign the team name to the array
+                    }
+                }
+				return teamNames;
+			}
+
     // Action Commands
     public void addWin() {
         Wins++;
