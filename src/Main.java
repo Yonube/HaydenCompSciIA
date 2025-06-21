@@ -17,11 +17,11 @@ public class Main {
         RobotTeam Valor = new RobotTeam(6800, "Valor");
         RobotTeam AwtyBots = new RobotTeam(5829, "AwtyBots");
         RobotTeam BlargleFish = new RobotTeam(6369, "BlargleFish");
-        RobotTeam Orbit = new RobotTeam(1690, "Orbit");
+        // Removed unused variable Orbit
 
         // AwtyBots.displayTeamInfo();
         // Create instances of Matches
-        Matches match1 = new Matches(1, AwtyBots, Vector, Robonauts, 100, TexasTorque, Valor, BlargleFish, 80);
+        // Removed unused variable match1
         mainapp.showMainAppGUI();
         AwtyBots.displayTeamInfo();
 
@@ -30,13 +30,24 @@ public class Main {
 
         while (true) {
             System.out.println("Input Data From QR Scout (type 'clear' to exit): ");
-            String input = scanner.nextLine();
+            String input = scanner.hasNextLine() ? scanner.nextLine() : "clear";
             if (input.equalsIgnoreCase("clear")) {
-            break;
+                System.out.println("Exiting the program.");
+                System.out.println("Thank you for using the Robotics Scouter App!");
+                java.awt.Window[] windows = java.awt.Window.getWindows();
+                for (java.awt.Window window : windows) {
+                    window.dispose();
+                }
+                break;
             }
-            Scanner.QRdataToRobotTeam(input);
+            try {
+            Scanner.QRdataToRobotTeam(input, scanner);
             AwtyBots.displayTeamInfo();
             AwtyBots.checkNotes();
+            } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
+            continue;
+            }
         }
 
         scanner.close();

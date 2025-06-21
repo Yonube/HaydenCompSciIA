@@ -104,10 +104,11 @@ public class RobotTeam {
     }
 
     public int getTotalCoralPoints() {
+        int total = 0;
         for (int i = 0; i < TotalCoralPointsInEachMatch.length; i++) {
-            TotalCoralPoints += TotalCoralPointsInEachMatch[i];
+            total += TotalCoralPointsInEachMatch[i];
         }
-        return TotalCoralPoints;
+        return total;
     }
 
     public void setTotalCoralPoints(int totalCoralPoints) {
@@ -115,10 +116,11 @@ public class RobotTeam {
     }
 
     public int getTotalAlgaePoints() {
+        int total = 0;
         for (int i = 0; i < TotalAlgaePointsInEachMatch.length; i++) {
-            TotalAlgaePoints += TotalAlgaePointsInEachMatch[i];
+            total += TotalAlgaePointsInEachMatch[i];
         }
-        return TotalAlgaePoints;
+        return total;
     }
 
     public void setTotalAlgaePoints(int totalAlgaePoints) {
@@ -126,10 +128,11 @@ public class RobotTeam {
     }
 
     public int getTotalPoints() {
+        int total = 0;
         for (int i = 0; i < TotalPointsInEachMatch.length; i++) {
-            TotalPoints += TotalPointsInEachMatch[i];
+            total += TotalPointsInEachMatch[i];
         }
-        return TotalPoints;
+        return total;
     }
 
     public void setTotalPoints(int totalPoints) {

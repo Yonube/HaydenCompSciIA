@@ -24,8 +24,8 @@ public class RobotTeamGUI implements ActionListener {
         panel.setLayout(new BorderLayout());
 
         // Add the team name at the top
-        JLabel teamNameLabel = new JLabel("Team Name: " + robotTeam.getTeamName(), JLabel.CENTER);
-        teamNameLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        JLabel teamNameLabel = new JLabel(robotTeam.getTeamName(), JLabel.CENTER);
+        teamNameLabel.setFont(new Font("Arial", Font.BOLD, 64));
         panel.add(teamNameLabel, BorderLayout.NORTH);
 
         // Create a list to display attributes
@@ -47,6 +47,8 @@ public class RobotTeamGUI implements ActionListener {
         listModel.addElement("Can Shallow Climb: " + robotTeam.canShallowClimb());
         listModel.addElement("Can Remove Algae: " + robotTeam.canRemoveAlgae());
         listModel.addElement("Can Defend: " + robotTeam.canDefend());
+        frame.setFocusable(true);
+        frame.requestFocusInWindow();
         attributesList = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(attributesList);
         panel.add(scrollPane, BorderLayout.WEST);
@@ -90,6 +92,18 @@ public class RobotTeamGUI implements ActionListener {
         // Add the panel to the frame
         frame.add(panel);
         frame.setVisible(true);
+       
+        
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    frame.dispose(); // Close the frame
+                    return true; // Event consumed
+                }
+                return false; // Event not consumed
+        }});
+
 
         //Close Button
         JButton closeButton = new JButton("Close");
@@ -100,7 +114,6 @@ public class RobotTeamGUI implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose(); // Close the current frame
-                mainapp.showMainAppGUI(); // Show the main app GUI again
             }
         });
     }

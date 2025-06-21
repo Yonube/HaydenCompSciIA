@@ -68,13 +68,13 @@ public class Scanner {
         return false;
     }
 
-    public static void QRdataToRobotTeam(String inputedddata) {
-        Scanner.processScannedData(inputedddata);
+    public static void QRdataToRobotTeam(String inputedddata, java.util.Scanner scanner) {
+        Scanner.processScannedData(inputedddata,scanner);
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
         Scanner.clear();
     }
 
-    public static void processScannedData(String inputFromQR) {
+    public static void processScannedData(String inputFromQR,java.util.Scanner scanner) {
         // Process the scanned data and update the robot's state
         // For example, you might want to parse the scanned data and update the robot's
         // attributes
@@ -90,6 +90,7 @@ public class Scanner {
         TeamNumber = Integer.parseInt(getScannedData()[3]);
         System.out.println("Got Team Number");
 
+        Scanner.createNewRobotTeam(TeamNumber,scanner);
         // If No Show Adds to Missed Matches
         // if (getScannedData()[5].equals("true")) {
         // MissedMatches[matchNumber] = true;
@@ -151,13 +152,13 @@ public class Scanner {
 
     public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
-        team.addTotalPointsInMatch(Scanner.matchNumber, Scanner.TotalPoints);
+        team.addTotalPointsInMatch(matchNumber, TotalPoints);
         System.out.println("Got Total Points: " + TotalPoints);
 
-        team.addTotalCoralPointsInMatch(Scanner.matchNumber, Scanner.TotalCoralPoints);
+        team.addTotalCoralPointsInMatch(matchNumber, TotalCoralPoints);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
 
-        team.addTotalAlgaePointsInMatch(Scanner.matchNumber, Scanner.TotalAlgaePoints);
+        team.addTotalAlgaePointsInMatch(matchNumber, TotalAlgaePoints);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
 
         team.setCanRemoveAlgae(CanRemoveAlgae);
@@ -175,6 +176,16 @@ public class Scanner {
         // Send all the data to the match
         if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("R1")) {
             match.setRed1(Scanner.determineRobotTeam(TeamNumber));
+        } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("R2")) {
+            match.setRed2(Scanner.determineRobotTeam(TeamNumber));
+        } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("R3")) {
+            match.setRed3(Scanner.determineRobotTeam(TeamNumber));
+        } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B1")) {
+            match.setBlue1(Scanner.determineRobotTeam(TeamNumber));
+        } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B2")) {
+            match.setBlue2(Scanner.determineRobotTeam(TeamNumber));
+        } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B3")) {
+            match.setBlue3(Scanner.determineRobotTeam(TeamNumber));
         }
 
     }
@@ -253,5 +264,38 @@ public class Scanner {
         TotalAlgaePoints = 0;
         TotalPoints = 0;
     }
+    public static boolean checkIfRobotTeamExists(int teamNumber) {
+        // Check if the robot team exists in the directory
+        for (RobotTeam team : RobotTeam.AllTeams) {
+            if (team != null && team.getTeamNumber() == teamNumber) {
+                System.out.println("Robot team with number " + teamNumber + " exists in the directory.");
+                return true;
+            }
+        }
+        System.out.println("Robot team with number " + teamNumber + " does not exist in the directory.");
+        return false;
+    }
+    public static boolean checkIfRobotTeamExists(String teamName) {
+        // Check if the robot team exists in the directory
+        for (RobotTeam team : RobotTeam.AllTeams) {
+            if (team != null && team.getTeamName().equals(teamName)) {
+                System.out.println("Robot team with name " + teamName + " exists in the directory.");
+                return true;
+            }
+        }
+        System.out.println("Robot team with name " + teamName + " does not exist in the directory.");
+        return false;
+    }
 
+    public static void createNewRobotTeam(int teamNumber, java.util.Scanner scanner) {
+        // Create a new RobotTeam if it does not exist
+        if (!checkIfRobotTeamExists(teamNumber)) {
+            RobotTeam newTeam = new RobotTeam(teamNumber, null);
+            System.out.println("Created new RobotTeam with number: " + teamNumber);
+            System.out.println("Please state RobotTeam name: ");
+            String input = scanner.nextLine(); // Use the passed Scanner object
+            newTeam.setTeamName(input);
+            System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+        }
+    }
 }
