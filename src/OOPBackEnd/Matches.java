@@ -12,6 +12,7 @@ public class Matches {
     private RobotTeam Red3;
     private int RedScore;
     private static Matches[] allMatches = new Matches[90]; // Placeholder for all matches
+    private boolean isPopulated; // Boolean variable to track if the match is populated
 
     public Matches(int matchNumber, RobotTeam Blue1, RobotTeam Blue2, RobotTeam Blue3, int BlueScore,
             RobotTeam Red1, RobotTeam Red2, RobotTeam Red3, int RedScore) {
@@ -24,7 +25,9 @@ public class Matches {
         this.Red2 = Red2;
         this.Red3 = Red3;
         this.RedScore = RedScore;
+        this.isPopulated = false;
         numberOfMatchesPlayed++;
+        allMatches[matchNumber] = this;
     }
 
     public int getMatchNumber() {
@@ -34,7 +37,6 @@ public class Matches {
     public void setMatchNumber(int matchNumber) {
         this.matchNumber = matchNumber;
     }
-
     public RobotTeam getBlue1() {
         return Blue1;
     }
@@ -107,10 +109,17 @@ public class Matches {
         Matches.numberOfMatchesPlayed = numberOfMatchesPlayed;
     }
     public static Matches[] getAllMatches() {
-        // This method should return a list of all matches played
-        // For now, we can return an empty array or a placeholder
         return allMatches;
     }
+
+    public boolean getIsPopulated() {
+        return isPopulated;
+    }
+
+    public void setIsPopulated(boolean isPopulated) {
+        this.isPopulated = isPopulated;
+    }
+
     // Action Commands
     public void addWinToWinningTeam() {
         if (BlueScore > RedScore) {

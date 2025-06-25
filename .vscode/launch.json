@@ -3,32 +3,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "MainCopy",
-            "request": "launch",
-            "mainClass": "src.MainCopy",
-            "projectName": "HaydenCompSciIA_e92b7e81"
-        },
-        {
-            "type": "java",
-            "name": "mainapp",
-            "request": "launch",
-            "mainClass": "src.JavaFXGUI.mainapp",
-            "projectName": "HaydenCompSciIA_e92b7e81"
-        },
-        {
-            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "src.Main",
             "projectName": "HaydenCompSciIA_e92b7e81"
-        },
-        {
-            "type": "java",
-            "name": "Launch JavaFX App",
-            "request": "launch",
-            "mainClass": "src.JavaFXGUI.mainapp",
-            "vmArgs": "--module-path /Users/haydenroberts/Documents/javafx-sdk-24/lib --add-modules javafx.controls,javafx.fxml",
-            "projectName": "HaydenCompSciIA"
         }
     ]
 }

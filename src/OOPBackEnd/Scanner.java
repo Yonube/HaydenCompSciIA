@@ -53,24 +53,25 @@ public class Scanner {
         return TeamNumber;
     }
 
-    public static boolean doesMatchDataExist(int MatchNumber) {
-        // Check if the match data exists in any of the matches
-        for (Matches match : Matches.getAllMatches()) {
-            if (match == null) {
-                continue; // Skip null matches
-            }
-            if (match.getMatchNumber() == MatchNumber) {
-                System.out.println("Match data exists for match number: " + MatchNumber);
-                return true;
-            }
-        }
-        System.out.println("No match data exists for match number: " + MatchNumber);
-        return false;
-    }
+    // public static boolean doesMatchDataExist(int MatchNumber) {
+    //     // Check if the match data exists in any of the matches
+    //     for (Matches match : Matches.getAllMatches()) {
+    //         if (match == null) {
+    //             continue; // Skip null matches
+    //         }
+    //         if (match.getMatchNumber() == MatchNumber) {
+    //             System.out.println("Match data exists for match number: " + MatchNumber);
+    //             return true;
+    //         }
+    //     }
+    //     System.out.println("No match data exists for match number: " + MatchNumber);
+    //     return false;
+    // }
 
     public static void QRdataToRobotTeam(String inputedddata, java.util.Scanner scanner) {
         Scanner.processScannedData(inputedddata,scanner);
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
         Scanner.clear();
     }
 
@@ -83,12 +84,17 @@ public class Scanner {
         Scanner.setScannedData(inputFromQR.split("\t"));
         System.out.println("Split data");
         // Get match number
-        matchNumber = Integer.parseInt(getScannedData()[1]);
+        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
 
         // Team Number
-        TeamNumber = Integer.parseInt(getScannedData()[3]);
+        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
+
+        // Robot
+        String robot = getScannedData()[ConstantsForScanner.getRobot()];
+        System.out.println("Got Robot: " + robot);
+
 
         Scanner.createNewRobotTeam(TeamNumber,scanner);
         // If No Show Adds to Missed Matches
@@ -187,6 +193,7 @@ public class Scanner {
         } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B3")) {
             match.setBlue3(Scanner.determineRobotTeam(TeamNumber));
         }
+        match.setIsPopulated(true);
 
     }
 

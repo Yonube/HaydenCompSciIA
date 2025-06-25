@@ -5,10 +5,14 @@ import src.OOPBackEnd.RobotTeam;
 import src.OOPBackEnd.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        
+public static void main(String[] args) {
+        // Initialize Scanner
         java.util.Scanner scanner = new java.util.Scanner(System.in);
 
+        // Initialize All Matches
+        for (int i = 1; i < Matches.getAllMatches().length; i++) {
+            Matches.getAllMatches()[i] = new Matches(i, null, null, null, 0, null, null, null, 0); // Initialize with null values
+        }
         // Create instances of RobotTeam
 
         RobotTeam Vector = new RobotTeam(8177, "Vector");
