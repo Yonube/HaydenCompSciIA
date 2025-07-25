@@ -33,6 +33,7 @@ public class RobotTeam {
 
     // Other Things that may be useful
     private String[] Notes;
+    private String imageid;
     // private Image TeamImage;
 
     public RobotTeam(int TeamNumber, String TeamName) {
@@ -263,7 +264,12 @@ public class RobotTeam {
         }
 
     }
-
+    public void setImageId(String imageid) {
+        this.imageid = imageid;
+    }
+    public String getImageId() {
+        return imageid;
+    }
     public static String[] getAllTeamNames() {
 				String[] teamNames = new String[AllTeams.length];
                 int index = 0;

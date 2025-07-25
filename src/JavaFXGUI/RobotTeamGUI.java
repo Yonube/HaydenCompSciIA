@@ -53,6 +53,23 @@ public class RobotTeamGUI implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(attributesList);
         panel.add(scrollPane, BorderLayout.WEST);
 
+        // JPanel robotPanel = new JPanel();
+        // robotPanel.setLayout(new BorderLayout());
+        // panel.add(robotPanel, BorderLayout.CENTER);
+        // // Add a label for the robot image
+        // ImageIcon robotImageIcon = new ImageIcon("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".png");
+        // if (robotImageIcon.getIconWidth() == -1) { // Check if the image is invalid
+        //     robotImageIcon = new ImageIcon("src/ImagesandSerialization/generic.png"); // Use generic image
+        // }
+        // JLabel robotImageLabel = new JLabel(robotImageIcon);
+        // System.out.println("Works");
+        // // Scale the image to fit the window
+        // Image scaledImage = robotImageIcon.getImage().getScaledInstance(robotPanel.getWidth(), robotPanel.getHeight(), Image.SCALE_SMOOTH);
+        // robotImageIcon = new ImageIcon(scaledImage);
+        // robotImageLabel.setIcon(robotImageIcon);
+        // robotPanel.add(robotImageLabel, BorderLayout.CENTER);
+
+
         // // Create a panel for the pie chart
         // JPanel pieChartPanel = new JPanel() {
         //     @Override

@@ -54,6 +54,12 @@ public class MatchGUI implements ActionListener {
         closeButton.addActionListener(e -> frame.dispose());
         panel.add(closeButton, BorderLayout.SOUTH);
 
+        // Add image onto center of frame
+        JLabel imageLabel = new JLabel(new ImageIcon("src/ImagesandSerialization/2025_REEFSCAPE.png")); 
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(imageLabel, BorderLayout.CENTER);
+
+
         // Add the panel to the frame
         frame.add(panel);
         frame.setVisible(true);

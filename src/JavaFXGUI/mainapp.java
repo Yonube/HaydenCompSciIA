@@ -7,6 +7,7 @@ import java.awt.Color;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class mainapp implements ActionListener {
 	private static JFrame frame;
