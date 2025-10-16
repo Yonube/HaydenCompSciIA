@@ -3,12 +3,11 @@ import src.OOPBackEnd.RobotTeam;
 import src.JavaFXGUI.driveTeamGUI;
 import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.Scanner;
-import java.awt.Color;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 public class mainapp implements ActionListener {
 	private static JFrame frame;
 	private static JPanel panel;
@@ -18,12 +17,18 @@ public class mainapp implements ActionListener {
 	private static JScrollPane scrollPane;
 	private static JPanel matchesPanel;
 	private static JScrollPane m_scrollPane;
+	private static JButton inputDataButton;
+	private static JTextField inputDataField;
+	private static JButton addTeamButton;
+	private static JButton inputFileButton;
+	public static int width = 1500;
+	public static int height = 900;
 
 	public static void showMainAppGUI() {
 
 		frame = new JFrame();
 		panel = new JPanel();
-		frame.setSize(1500, 900);
+		frame.setSize(width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.add(panel);
@@ -56,11 +61,50 @@ public class mainapp implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //frame.dispose(); // Close the current frame
-                RobotTeamGUI robotTeamGUI = new RobotTeamGUI(Scanner.determineRobotTeam(teamName)); 
+				new RobotTeamGUI(Scanner.determineRobotTeam(teamName)); 
             }
+			
         });
 
 		}
+		// Add a button to add a new robot team
+		// addTeamButton = new JButton("+");
+		// System.out.println("Add Team Button Created");
+		// addTeamButton.setFont(new Font("Arial", Font.PLAIN, 32));
+		// System.out.println("Add Team Button Font Set");
+		// robotTeamsPanel.add(addTeamButton);
+		// System.out.println("Add Team Button Added to Panel");
+		// addTeamButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+		// addTeamButton.addActionListener(new ActionListener() {
+		// 	@Override
+		// 	public void actionPerformed(ActionEvent event) {
+		// 		JPanel inputPanel = new JPanel(new GridLayout(2, 2));
+		// 		JTextField teamNameField = new JTextField();
+		// 		JTextField teamNumberField = new JTextField();
+
+		// 		inputPanel.add(new JLabel("Team Name:"));
+		// 		inputPanel.add(teamNameField);
+		// 		inputPanel.add(new JLabel("Team Number:"));
+		// 		inputPanel.add(teamNumberField);
+
+		// 		int result = JOptionPane.showConfirmDialog(null, inputPanel, "Add Robot Team", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		// 		if (result == JOptionPane.OK_OPTION) {
+		// 			String teamName = teamNameField.getText();
+		// 			String teamNumber = teamNumberField.getText();
+		// 			try {
+		// 				java.util.Scanner tempscanner = new java.util.Scanner("");
+		// 				Scanner.createNewRobotTeam(Integer.parseInt(teamNumber), teamName, tempscanner);
+		// 				refresh(); // Refresh the GUI to show the new team
+		// 				tempscanner.close();
+		// 			} catch (NumberFormatException ex) {
+		// 				JOptionPane.showMessageDialog(null, "Invalid team number. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+		// 			} catch (Exception ex) {
+		// 				JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		// 			}
+		// 		}
+		// 	}
+		// });
 				// Create a scrollable panel for Matches
 		matchesPanel = new JPanel();
 		matchesPanel.setLayout(new BoxLayout(matchesPanel, BoxLayout.Y_AXIS));
@@ -103,9 +147,54 @@ public class mainapp implements ActionListener {
 			}
 		});
 		panel.add(refreshButton);
-		
-		
-		
+		//Add textbox and button to input data
+		inputDataButton = new JButton("Input Data");
+		inputDataButton.setFont(new Font("Arial", Font.PLAIN, 32));
+		inputDataField = new JTextField();
+		inputDataField.setFont(new Font("Arial", Font.PLAIN, 32));
+		inputDataButton.setBounds(900, height-50, 200, 50);
+		inputDataField.setBounds(300, height-50, 600, 50);
+		inputDataButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String inputData = inputDataField.getText();
+				try {
+					Scanner.QRdataToRobotTeam(inputData, new java.util.Scanner(System.in));
+					refresh(); 
+				} catch (Exception ex) {
+					System.err.println("An error occurred: " + ex.getMessage());
+				}
+			}
+		});
+		inputFileButton = new JButton("Input File");
+		inputFileButton.setFont(new Font("Arial", Font.PLAIN, 32));
+		inputFileButton.setBounds(600, height-50, 200, 50);
+		inputFileButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				int returnValue = fileChooser.showOpenDialog(null);
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					try {
+						java.util.Scanner fileScanner = new java.util.Scanner(selectedFile);
+						while (fileScanner.hasNextLine()) {
+							String line = fileScanner.nextLine();
+							try {
+								Scanner.QRdataToRobotTeam(line, new java.util.Scanner(System.in));
+							} catch (Exception ex) {
+								System.err.println("An error occurred while processing line: " + line + " Error: " + ex.getMessage());
+							}
+						}
+						fileScanner.close();
+						refresh(); 
+					} catch (Exception ex) {
+						System.err.println("An error occurred: " + ex.getMessage());
+					}
+				}
+			}
+		});
+		panel.add(inputDataButton);
+		panel.add(inputDataField);
+	
 		frame.setVisible(true);
 
 
@@ -117,7 +206,15 @@ public class mainapp implements ActionListener {
 	}
 
 	public static void refresh() {
-		frame.dispose(); // Dispose of the current frame
-		showMainAppGUI(); // Reopen the GUI
+		// Clear the panel and remove all components
+		panel.removeAll();
+	
+		// Reinitialize the components and layout
+		showMainAppGUI();
+	
+		// Revalidate and repaint the panel to reflect changes
+		panel.revalidate();
+		panel.repaint();
 	}
+
 }

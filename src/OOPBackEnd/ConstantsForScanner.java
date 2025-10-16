@@ -1,5 +1,6 @@
 package src.OOPBackEnd;
 
+
 public class ConstantsForScanner {
     // Constants for array indices
     private static final int SCOUTER_INITIALS = 0;

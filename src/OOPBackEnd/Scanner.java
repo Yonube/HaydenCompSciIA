@@ -1,5 +1,10 @@
 package src.OOPBackEnd;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import src.OOPBackEnd.ConstantsForScanner;
 
 public class Scanner {
@@ -209,11 +214,6 @@ public class Scanner {
         return false;
     }
 
-    /**
-     * @param teamNumber
-     * @return RobotTeam
-     */
-
     public static RobotTeam determineRobotTeam(int teamNumber) {
         // Determine the robot team based on the team number
         for (int i = 0; i < RobotTeam.AllTeams.length; i++) {
@@ -304,5 +304,69 @@ public class Scanner {
             newTeam.setTeamName(input);
             System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
+    }
+    public static void createNewRobotTeam(int teamNumber, String teamName,java.util.Scanner scanner) {
+        // Create a new RobotTeam if it does not exist
+        if (!checkIfRobotTeamExists(teamNumber)) {
+            RobotTeam newTeam = new RobotTeam(teamNumber, teamName);
+            System.out.println("Created new RobotTeam with number: " + teamNumber);
+            System.out.println("Please state RobotTeam name: ");
+            String input = scanner.nextLine(); // Use the passed Scanner object
+            newTeam.setTeamName(input);
+            System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+        }
+    }
+
+    // Handling TSV Data
+     public static String tsvFileToString(String filePath) throws IOException {
+        // Creates a Path object for the file
+        Path file = Path.of(filePath);
+        String fileContent = Files.readString(file);
+        return fileContent;
+    }
+    public static String[] tsvStringToArray(String tsvData) {
+        // Splits the TSV data into an array of strings using tab as the delimiter
+        String[] dataArray = tsvData.split("\n");
+        return dataArray;
+    }
+
+    public static String[] tsvRowToArray(String tsvRow) {
+        // Splits a single TSV row into an array of strings using tab as the delimiter
+        String[] rowArray = tsvRow.split("\t");
+        return rowArray;
+    }
+
+    public static void processTSVData(File filename, java.util.Scanner scanner) throws IOException {
+        String tsvData = tsvFileToString(filename.getAbsolutePath());
+        String[] rows = tsvStringToArray(tsvData);
+        for (String row : rows) {
+            System.out.println("Processing row: " + row);
+            // Example: You can call processScannedData or other methods here
+            Scanner.QRdataToRobotTeam(row, scanner);
+            
+        }
+    }
+    // Handling CSV Data
+    public static String csvFileToString(String filePath) throws IOException {
+        // Creates a Path object for the file
+        Path file = Path.of(filePath);
+
+        // Reads the entire content of the file into a single String.
+        // It uses the system's default charset (usually UTF-8).
+        String fileContent = Files.readString(file);
+
+        return fileContent;
+    }
+
+    public static String[] csvStringToArray(String csvData) {
+        // Splits the CSV data into an array of strings using comma as the delimiter
+        String[] dataArray = csvData.split(",");
+        return dataArray;
+    }
+
+    public static String[] csvRowToArray(String csvRow) {
+        // Splits a single CSV row into an array of strings using comma as the delimiter
+        String[] rowArray = csvRow.split(",");
+        return rowArray;
     }
 }
