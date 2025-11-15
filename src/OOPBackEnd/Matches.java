@@ -1,6 +1,8 @@
 package src.OOPBackEnd;
 
-public class Matches {
+import java.io.Serializable;
+
+public class Matches implements Serializable{
     private static int numberOfMatchesPlayed = 0;
     private int matchNumber;
     private RobotTeam Blue1;

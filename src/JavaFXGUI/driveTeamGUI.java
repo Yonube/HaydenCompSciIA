@@ -1,6 +1,4 @@
 package src.JavaFXGUI;
-
-import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
 import java.awt.*;
 

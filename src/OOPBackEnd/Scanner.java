@@ -1,13 +1,17 @@
 package src.OOPBackEnd;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import javax.swing.*;
+
 import src.OOPBackEnd.ConstantsForScanner;
 
-public class Scanner {
+public class Scanner implements ActionListener{
     // Scanner class to read input from the QR Code
     // This class will handle the QR code scanning and data extraction
     // It will also handle the conversion of the scanned data into a format that can
@@ -80,7 +84,85 @@ public class Scanner {
         Scanner.clear();
     }
 
+    public static void FileDataToRobotTeam(String inputedData, JFrame frame){
+        Scanner.processScannedData(inputedData,frame);
+        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
+        Scanner.clear();
+    }
     public static void processScannedData(String inputFromQR,java.util.Scanner scanner) {
+        // Process the scanned data
+        System.out.println("Processing scanned data: ");
+        // Split the scanned data into an array
+        Scanner.setScannedData(inputFromQR.split("\t"));
+        System.out.println("Split data");
+        // Get match number
+        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+        System.out.println(" Got Match Number");
+        // Team Number
+        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+        System.out.println("Got Team Number");
+        // Robot
+        String robot = getScannedData()[ConstantsForScanner.getRobot()];
+        System.out.println("Got Robot: " + robot);
+        // Create Robot Team if it does not exist (checking is done in the method)
+        Scanner.createNewRobotTeam(TeamNumber,scanner);
+        // Coral Points
+        TotalCoralPoints =
+                // Auton Coral L1
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
+                // Auton Coral L2
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
+                        // Auton Coral L3
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
+                        // Auton Coral L4
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
+                        // Teleop Coral L1
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
+                        // Teleop Coral L2
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
+                        // Teleop Coral L3
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
+                        // Teleop Coral L4
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
+        System.out.println("Got Coral Points: " + TotalCoralPoints);
+        // Algae Points
+        TotalAlgaePoints =
+                // Auton Algae Barge
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
+                // Auton Algae Processor
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
+                        // Teleop Algae Barge
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
+                        // Teleop Algae Processor
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
+        System.out.println("Got Algae Points: " + TotalAlgaePoints);
+        // Total Points
+        TotalPoints = TotalCoralPoints + TotalAlgaePoints;
+        System.out.println("Got Total Points: " + TotalPoints);
+        // Can Remove Algae
+        if (getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeAuto()].equals("true") ||
+                getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeTeleop()].equals("true")) {
+            CanRemoveAlgae = true;
+        }
+        // Auton
+        if (getScannedData()[ConstantsForScanner.getMoved()] == "true") {
+            HasAuton = true;
+        }
+        // Comments
+        if (getScannedData().length < 35) {
+            System.out.println("Error: Scanned data is incomplete or no comments provided.");
+            return;
+        } else {
+            if (getScannedData()[ConstantsForScanner.getComments()] != null) {
+                comments = getScannedData()[ConstantsForScanner.getComments()];
+                System.out.println("Got Comments: " + comments);
+            }
+        }
+
+    }
+
+    public static void processScannedData(String inputFromQR, JFrame frame) {
         // Process the scanned data and update the robot's state
         // For example, you might want to parse the scanned data and update the robot's
         // attributes
@@ -88,6 +170,86 @@ public class Scanner {
         // Split the scanned data into an array
         Scanner.setScannedData(inputFromQR.split("\t"));
         System.out.println("Split data");
+        // Get match number
+        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+        System.out.println(" Got Match Number");
+
+        // Team Number
+        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+        System.out.println("Got Team Number");
+
+        // Robot
+        String robot = getScannedData()[ConstantsForScanner.getRobot()];
+        System.out.println("Got Robot: " + robot);
+
+
+        Scanner.createNewRobotTeamGUI(TeamNumber,frame);
+        // If No Show Adds to Missed Matches
+        // if (getScannedData()[5].equals("true")) {
+        // MissedMatches[matchNumber] = true;
+        // }
+        // Coral Points
+        TotalCoralPoints =
+                // Auton Coral L1
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
+                // Auton Coral L2
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
+                        // Auton Coral L3
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
+                        // Auton Coral L4
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
+                        // Teleop Coral L1
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
+                        // Teleop Coral L2
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
+                        // Teleop Coral L3
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
+                        // Teleop Coral L4
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
+        System.out.println("Got Coral Points: " + TotalCoralPoints);
+        // Algae Points
+        TotalAlgaePoints =
+                // Auton Algae Barge
+                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
+                // Auton Algae Processor
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
+                        // Teleop Algae Barge
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
+                        // Teleop Algae Processor
+                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
+        System.out.println("Got Algae Points: " + TotalAlgaePoints);
+        // Total Points
+        TotalPoints = TotalCoralPoints + TotalAlgaePoints;
+        System.out.println("Got Total Points: " + TotalPoints);
+        // Can Remove Algae
+        if (getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeAuto()].equals("true") ||
+                getScannedData()[ConstantsForScanner.getIntentionallyRemovedAlgaeTeleop()].equals("true")) {
+            CanRemoveAlgae = true;
+        }
+        // Auton
+        if (getScannedData()[ConstantsForScanner.getMoved()] == "true") {
+            HasAuton = true;
+        }
+        // Comments
+        if (getScannedData().length < 35) {
+            System.out.println("Error: Scanned data is incomplete or no comments provided.");
+            return;
+        } else {
+            if (getScannedData()[ConstantsForScanner.getComments()] != null) {
+                comments = getScannedData()[ConstantsForScanner.getComments()];
+                System.out.println("Got Comments: " + comments);
+            }
+        }
+
+    }
+
+    public static void processScannedData(String[] inputFromFile,java.util.Scanner scanner) {
+        // Process the scanned data and update the robot's state
+        // For example, you might want to parse the scanned data and update the robot's
+        // attributes
+        System.out.println("Processing scanned data: ");
+        // Split the scanned data into an array
+        Scanner.setScannedData(inputFromFile);
         // Get match number
         matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
@@ -160,7 +322,7 @@ public class Scanner {
         }
 
     }
-
+    
     public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
         team.addTotalPointsInMatch(matchNumber, TotalPoints);
@@ -305,6 +467,7 @@ public class Scanner {
             System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
     }
+
     public static void createNewRobotTeam(int teamNumber, String teamName,java.util.Scanner scanner) {
         // Create a new RobotTeam if it does not exist
         if (!checkIfRobotTeamExists(teamNumber)) {
@@ -316,23 +479,55 @@ public class Scanner {
             System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
     }
+    public static void createNewRobotTeamGUI(int teamNumber, JFrame frame) {
+        // Create a new RobotTeam if it does not exist
+        if (!checkIfRobotTeamExists(teamNumber)) {
+            RobotTeam newTeam = new RobotTeam(teamNumber, null);
+            JTextField teamNameField = new JTextField(20);
+            JButton skip = new JButton("Use Team Number?");
+                skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("Enter RobotTeam name:"));
+            panel.add(teamNameField);
+            panel.add(skip);
+            frame.add(panel);
+
+            int result = JOptionPane.showConfirmDialog(frame, panel, "New RobotTeam", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                newTeam.setTeamName(teamNameField.getText());
+                System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+            } else {
+                System.out.println("Error in Team Creation.");
+            }
+            frame.remove(panel);
+        }
+    }
 
     // Handling TSV Data
-     public static String tsvFileToString(String filePath) throws IOException {
-        // Creates a Path object for the file
-        Path file = Path.of(filePath);
-        String fileContent = Files.readString(file);
-        return fileContent;
+    public static String tsvFileToString(String filePath) throws IOException {
+        try {
+            Path file = java.nio.file.Paths.get(filePath);
+            System.out.println("Attempting to read file: " + file.toAbsolutePath());
+            String fileContent = Files.readString(file);
+            System.out.println("Read TSV file content successfully.");
+            return fileContent;
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + filePath);
+            throw e; // Re-throw the exception for higher-level handling
+        }
     }
     public static String[] tsvStringToArray(String tsvData) {
         // Splits the TSV data into an array of strings using tab as the delimiter
         String[] dataArray = tsvData.split("\n");
+        System.out.println("Split TSV data into array.");
         return dataArray;
     }
 
     public static String[] tsvRowToArray(String tsvRow) {
         // Splits a single TSV row into an array of strings using tab as the delimiter
         String[] rowArray = tsvRow.split("\t");
+        System.out.println("Split TSV row into array.");
         return rowArray;
     }
 
@@ -368,5 +563,11 @@ public class Scanner {
         // Splits a single CSV row into an array of strings using comma as the delimiter
         String[] rowArray = csvRow.split(",");
         return rowArray;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
     }
 }

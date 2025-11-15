@@ -2,6 +2,7 @@ package src.JavaFXGUI;
 
 import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -52,9 +53,21 @@ public class RobotTeamGUI implements ActionListener {
         listModel.addElement("Stuck Game Pieces: " + robotTeam.getStuckGamePieces());
         listModel.addElement("Total Coral Points: " + robotTeam.getTotalCoralPoints());
         listModel.addElement("Total Algae Points: " + robotTeam.getTotalAlgaePoints());
-
+        JButton changeNameButton = new JButton("Change Name");
+        changeNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newName = JOptionPane.showInputDialog(frame, "Enter new team name:", "Change Team Name", JOptionPane.PLAIN_MESSAGE);
+                if (newName != null && !newName.trim().isEmpty()) {
+                    robotTeam.setTeamName(newName);
+                    teamNameLabel.setText(newName);
+                    listModel.setElementAt("TeamName: " + newName, 1); // Update the list model
+                }
+            }
+        });
+       
         attributesList = new JList<>(listModel);
         scrollPane = new JScrollPane(attributesList);
+        scrollPane.add(changeNameButton);
         panel.add(scrollPane, BorderLayout.WEST);
 
         // Initialize the robot panel
@@ -104,6 +117,7 @@ public class RobotTeamGUI implements ActionListener {
                 frame.dispose(); // Close the current frame
             }
         });
+        
     }
 
     @Override

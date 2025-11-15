@@ -1,6 +1,8 @@
 package src.OOPBackEnd;
 
-public class RobotTeam {
+import java.io.Serializable;
+
+public class RobotTeam implements Serializable{
     // Statics
     public static RobotTeam[] AllTeams = new RobotTeam[90];
 
@@ -350,10 +352,5 @@ public class RobotTeam {
         System.out.println("Breakdowns: " + getBreakdowns());
         System.out.println("Stuck Game Pieces: " + getStuckGamePieces());
     }
-    //
-
-    // this. = Boolean.parseBoolean(ToBeSortedData[4]);
 
 }
-
-// Common Starting Position

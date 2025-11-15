@@ -9,9 +9,13 @@ public class MatchGUI implements ActionListener {
     private JFrame frame;
     private JPanel panel;
     private JLabel matchNumberLabel;
+    @SuppressWarnings("unused")
     private DefaultListModel<String> listModel;
+    @SuppressWarnings("unused")
     private JList<String> attributesList;
+    @SuppressWarnings("unused")
     private JScrollPane scrollPane;
+    @SuppressWarnings("unused")
     private JButton closeButton;
     
     

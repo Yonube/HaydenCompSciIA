@@ -38,7 +38,7 @@ public class ConstantsForScanner {
     private static final int DEFENSIVE_SKILL = 32;
     private static final int YELLOW_RED_CARD = 33;
     private static final int COMMENTS = 34;
-
+    //Getters and Setters
     public static int getScouterInitials() {
         return SCOUTER_INITIALS;
     }

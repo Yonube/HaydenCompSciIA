@@ -1,14 +1,15 @@
 package src.JavaFXGUI;
-import src.OOPBackEnd.RobotTeam;
-import src.JavaFXGUI.driveTeamGUI;
-import src.OOPBackEnd.Matches;
-import src.OOPBackEnd.Scanner;
-
+import src.Main;
+import src.OOPBackEnd.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-public class mainapp implements ActionListener {
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class Mainapp implements ActionListener {
 	private static JFrame frame;
 	private static JPanel panel;
     private static JLabel titleLabel;
@@ -19,18 +20,20 @@ public class mainapp implements ActionListener {
 	private static JScrollPane m_scrollPane;
 	private static JButton inputDataButton;
 	private static JTextField inputDataField;
-	private static JButton addTeamButton;
+	// private static JButton addTeamButton;
 	private static JButton inputFileButton;
 	public static int width = 1500;
 	public static int height = 900;
 
-	public static void showMainAppGUI() {
-
+	public Mainapp() {
 		frame = new JFrame();
-		panel = new JPanel();
 		frame.setSize(width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		showMainAppGUI();
+	}
+	
+	public static void showMainAppGUI() {
+		panel = new JPanel();
 		frame.add(panel);
 		panel.setLayout(null);
 
@@ -51,17 +54,20 @@ public class mainapp implements ActionListener {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panel.add(scrollPane);
 
-		// Add labels for each robot team
-		for (String teamName : RobotTeam.getAllTeamNames()) { // Assuming RobotTeam has a method to get all team names
+		// Add buttons for each robot team
+		for (RobotTeam robot : RobotTeam.AllTeams) { // Assuming RobotTeam has a method to get all team names
 			// Create a button for each team
-			JButton teamButton = new JButton(teamName);
+			if(robot == null){
+				continue;
+			}
+			JButton teamButton = new JButton(robot.getTeamNumber()+ " (" + robot.getTeamName()+ ")");
 			teamButton.setFont(new Font("Arial", Font.PLAIN, 32));
 			robotTeamsPanel.add(teamButton);
 			teamButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //frame.dispose(); // Close the current frame
-				new RobotTeamGUI(Scanner.determineRobotTeam(teamName)); 
+				new RobotTeamGUI(Scanner.determineRobotTeam(robot.getTeamName())); 
             }
 			
         });
@@ -130,13 +136,13 @@ public class mainapp implements ActionListener {
 			matchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent r) {
+				@SuppressWarnings("unused")
 				MatchGUI matchGUI = new MatchGUI(Matches.getAllMatches()[matchIndex]); // Assuming MatchGUI takes a match object
 
 			}
 		});
 
 		}
-		// Add a button to refresh the GUI
 		refreshButton = new JButton("Refresh");
 		refreshButton.setFont(new Font("Arial", Font.PLAIN, 32));
 		refreshButton.setBounds(1180, 0, 300, 50);
@@ -162,38 +168,21 @@ public class mainapp implements ActionListener {
 					refresh(); 
 				} catch (Exception ex) {
 					System.err.println("An error occurred: " + ex.getMessage());
+					ex.printStackTrace();
 				}
 			}
 		});
 		inputFileButton = new JButton("Input File");
 		inputFileButton.setFont(new Font("Arial", Font.PLAIN, 32));
-		inputFileButton.setBounds(600, height-50, 200, 50);
+		inputFileButton.setBounds(0, 0, 200, 50);
 		inputFileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				int returnValue = fileChooser.showOpenDialog(null);
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					File selectedFile = fileChooser.getSelectedFile();
-					try {
-						java.util.Scanner fileScanner = new java.util.Scanner(selectedFile);
-						while (fileScanner.hasNextLine()) {
-							String line = fileScanner.nextLine();
-							try {
-								Scanner.QRdataToRobotTeam(line, new java.util.Scanner(System.in));
-							} catch (Exception ex) {
-								System.err.println("An error occurred while processing line: " + line + " Error: " + ex.getMessage());
-							}
-						}
-						fileScanner.close();
-						refresh(); 
-					} catch (Exception ex) {
-						System.err.println("An error occurred: " + ex.getMessage());
-					}
-				}
+				handlefileInput();
 			}
 		});
 		panel.add(inputDataButton);
 		panel.add(inputDataField);
+		panel.add(inputFileButton);
 	
 		frame.setVisible(true);
 
@@ -202,19 +191,46 @@ public class mainapp implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// No operation needed here; consider adding relevant logic if required
 	}
 
 	public static void refresh() {
-		// Clear the panel and remove all components
-		panel.removeAll();
-	
-		// Reinitialize the components and layout
-		showMainAppGUI();
-	
-		// Revalidate and repaint the panel to reflect changes
-		panel.revalidate();
-		panel.repaint();
-	}
+    // Clear the content pane of the frame
+    
+	frame.getContentPane().removeAll();
 
+    // Reinitialize the components and layout
+    showMainAppGUI();
+
+    // Revalidate and repaint the frame to reflect changes
+    frame.revalidate();
+    frame.repaint();
+	// Save data to files
+	Main.rtList.serialize();
+	Main.mList.serialize();
+}
+
+
+	public static void handlefileInput(){
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("TSV Files", "tsv"));
+		int returnValue = fileChooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fileChooser.getSelectedFile();
+			try {
+				java.util.List<String> lines = Files.readAllLines(Path.of(selectedFile.getAbsolutePath()));
+				for (String line : lines) {
+					try {
+						Scanner.FileDataToRobotTeam(line, frame);
+					} catch (Exception ex) {
+						System.err.println("An error occurred while processing line: " + line);
+						ex.printStackTrace();
+					}
+				}
+				refresh(); 
+			} catch (IOException e) {
+				System.err.println("An error occurred while reading the file: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
 }
