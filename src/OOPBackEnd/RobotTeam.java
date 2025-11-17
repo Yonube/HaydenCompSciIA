@@ -61,51 +61,39 @@ public class RobotTeam implements Serializable{
     public int getTeamNumber() {
         return TeamNumber;
     }
-
     public void setTeamNumber(int teamNumber) {
         TeamNumber = teamNumber;
     }
-
     public String getTeamName() {
         return TeamName;
     }
-
     public void setTeamName(String teamName) {
         TeamName = teamName;
     }
-
     public int getWins() {
         return Wins;
     }
-
     public void setWins(int wins) {
         Wins = wins;
     }
-
     public int getLosses() {
         return Losses;
     }
-
     public void setLosses(int losses) {
         Losses = losses;
     }
-
     public int getDraws() {
         return Draws;
     }
-
     public void setDraws(int draws) {
         Draws = draws;
     }
-
     public int getTotalMatchesPlayed() {
         return TotalMatchesPlayed;
     }
-
     public void setTotalMatchesPlayed(int totalMatchesPlayed) {
         TotalMatchesPlayed = totalMatchesPlayed;
     }
-
     public int getTotalCoralPoints() {
         int total = 0;
         for (int i = 0; i < TotalCoralPointsInEachMatch.length; i++) {
@@ -113,11 +101,9 @@ public class RobotTeam implements Serializable{
         }
         return total;
     }
-
     public void setTotalCoralPoints(int totalCoralPoints) {
         TotalCoralPoints = totalCoralPoints;
     }
-
     public int getTotalAlgaePoints() {
         int total = 0;
         for (int i = 0; i < TotalAlgaePointsInEachMatch.length; i++) {
@@ -125,11 +111,9 @@ public class RobotTeam implements Serializable{
         }
         return total;
     }
-
     public void setTotalAlgaePoints(int totalAlgaePoints) {
         TotalAlgaePoints = totalAlgaePoints;
     }
-
     public int getTotalPoints() {
         int total = 0;
         for (int i = 0; i < TotalPointsInEachMatch.length; i++) {
@@ -137,115 +121,87 @@ public class RobotTeam implements Serializable{
         }
         return total;
     }
-
     public void setTotalPoints(int totalPoints) {
         TotalPoints = totalPoints;
     }
-
     public int getBreakdowns() {
         return Breakdowns;
     }
-
     public void setBreakdowns(int breakdowns) {
         Breakdowns = breakdowns;
     }
-
     public int getStuckGamePieces() {
         return StuckGamePieces;
     }
-
     public void setStuckGamePieces(int stuckGamePieces) {
         StuckGamePieces = stuckGamePieces;
     }
-
     public int getTotalCoralPointsInMatch(int matchNumber) {
         return TotalCoralPointsInEachMatch[matchNumber];
     }
-
     public void setTotalCoralPointsInMatch(int matchNumber, int points) {
         TotalCoralPointsInEachMatch[matchNumber] = points;
     }
-
     public int getTotalAlgaePointsInMatch(int matchNumber) {
         return TotalAlgaePointsInEachMatch[matchNumber];
     }
-
     public void setTotalAlgaePointsInMatch(int matchNumber, int points) {
         TotalAlgaePointsInEachMatch[matchNumber] = points;
     }
-
     public int getTotalPointsInMatch(int matchNumber) {
         return TotalPointsInEachMatch[matchNumber];
     }
-
     public void setTotalPointsInMatch(int matchNumber, int points) {
         TotalPointsInEachMatch[matchNumber] = points;
     }
-
     public boolean[] getMissedMatches() {
         return MissedMatches;
     }
-
     public void setMissedMatches(boolean[] missedMatches) {
         MissedMatches = missedMatches;
     }
-
     public RobotTeam[] getAllTeams() {
         return AllTeams;
     }
-
     public boolean hasAuton() {
         return HasAuton;
     }
-
     public void setHasAuton(boolean hasAuton) {
         HasAuton = hasAuton;
     }
-
     public boolean hasTeleop() {
         return HasTeleop;
     }
-
     public void setHasTeleop(boolean hasTeleop) {
         HasTeleop = hasTeleop;
     }
-
     public boolean canDeepClimb() {
         return CanDeepClimb;
     }
-
     public void setCanDeepClimb(boolean canDeepClimb) {
         CanDeepClimb = canDeepClimb;
     }
-
     public boolean canShallowClimb() {
         return CanShallowClimb;
     }
-
     public void setCanShallowClimb(boolean canShallowClimb) {
         CanShallowClimb = canShallowClimb;
     }
-
     public boolean canRemoveAlgae() {
         return CanRemoveAlgae;
     }
-
     public void setCanRemoveAlgae(boolean canRemoveAlgae) {
         CanRemoveAlgae = canRemoveAlgae;
     }
-
     public boolean canDefend() {
         return CanDefend;
     }
-
     public void setCanDefend(boolean canDefend) {
         CanDefend = canDefend;
     }
-
     public String[] getNotes() {
         return Notes;
     }
-
     public void setNotes(String notes, int matchNumber) {
         for (int i = 0; i < Notes.length; i++) {
             if (Notes[i] == null && notes != null) {
@@ -254,7 +210,6 @@ public class RobotTeam implements Serializable{
             }
         }
     }
-
     public void checkNotes() {
         for (int i = 0; i < Notes.length; i++) {
             if (Notes[0] == null) {

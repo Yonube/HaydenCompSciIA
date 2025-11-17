@@ -1,6 +1,4 @@
-package src.JavaFXGUI;
-
-import src.OOPBackEnd.Matches;
+package src.OOPBackEnd;
 
 import java.io.*;
 import java.util.ArrayList;

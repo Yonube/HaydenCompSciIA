@@ -66,11 +66,11 @@ public class Mainapp implements ActionListener {
 			teamButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //frame.dispose(); // Close the current frame
+                // Open the RobotTeamGUI for the selected team
 				new RobotTeamGUI(Scanner.determineRobotTeam(robot.getTeamName())); 
             }
 			
-        });
+        	});
 
 		}
 		// Add a button to add a new robot team
