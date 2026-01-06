@@ -42,142 +42,106 @@ public class ConstantsForScanner {
     public static int getScouterInitials() {
         return SCOUTER_INITIALS;
     }
-
     public static int getMatchNumber() {
         return MATCH_NUMBER;
     }
-
     public static int getRobot() {
         return ROBOT;
     }
-
     public static int getTeamNumber() {
         return TEAM_NUMBER;
     }
-
     public static int getStartingPosition() {
         return STARTING_POSITION;
     }
-
     public static int getNoShow() {
         return NO_SHOW;
     }
-
     public static int getCagePosition() {
         return CAGE_POSITION;
     }
-
     public static int getMoved() {
         return MOVED;
     }
-
     public static int getTimer() {
         return TIMER;
     }
-
     public static int getAutonCoralL1() {
         return AUTON_CORAL_L1;
     }
-
     public static int getAutonCoralL2() {
         return AUTON_CORAL_L2;
     }
-
     public static int getAutonCoralL3() {
         return AUTON_CORAL_L3;
     }
-
     public static int getAutonCoralL4() {
         return AUTON_CORAL_L4;
     }
-
     public static int getAutonAlgaeBarge() {
         return AUTON_ALGAE_BARGE;
     }
-
     public static int getAutonAlgaeProcessor() {
         return AUTON_ALGAE_PROCESSOR;
     }
-
     public static int getIntentionallyRemovedAlgaeAuto() {
         return INTENTIONALLY_REMOVED_ALGAE_AUTO;
     }
-
     public static int getAutoFoul() {
         return AUTO_FOUL;
     }
-
     public static int getIntentionallyRemovedAlgaeTeleop() {
         return INTENTIONALLY_REMOVED_ALGAE_TELEOP;
     }
-
     public static int getPickupLocation() {
         return PICKUP_LOCATION;
     }
-
     public static int getTeleopCoralL1() {
         return TELEOP_CORAL_L1;
     }
-
     public static int getTeleopCoralL2() {
         return TELEOP_CORAL_L2;
     }
-
     public static int getTeleopCoralL3() {
         return TELEOP_CORAL_L3;
     }
-
     public static int getTeleopCoralL4() {
         return TELEOP_CORAL_L4;
     }
-
     public static int getTeleopAlgaeBarge() {
         return TELEOP_ALGAE_BARGE;
     }
-
     public static int getTeleopAlgaeProcessor() {
         return TELEOP_ALGAE_PROCESSOR;
     }
-
     public static int getCrossedFieldPlayedDefense() {
         return CROSSED_FIELD_PLAYED_DEFENSE;
     }
-
     public static int getWasRobotDefended() {
         return WAS_ROBOT_DEFENDED;
     }
-
     public static int getTouchedOpposingCage() {
         return TOUCHED_OPPOSING_CAGE;
     }
-
     public static int getEndPosition() {
         return END_POSITION;
     }
-
     public static int getDied() {
         return DIED;
     }
-
     public static int getTippedFellOver() {
         return TIPPED_FELL_OVER;
     }
-
     public static int getOffenseSkill() {
         return OFFENSE_SKILL;
     }
-
     public static int getDefensiveSkill() {
         return DEFENSIVE_SKILL;
     }
-
     public static int getYellowRedCard() {
         return YELLOW_RED_CARD;
     }
-
     public static int getComments() {
         return COMMENTS;
     }
-    
-
 }

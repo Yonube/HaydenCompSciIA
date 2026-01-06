@@ -504,6 +504,39 @@ public class Scanner implements ActionListener{
         }
     }
 
+
+    public static RobotTeam[] calculateUpToTop5RobotTeams(){
+        // Calculate and return the top 5 RobotTeams based on total points
+        
+        RobotTeam[] top5Teams = new RobotTeam[5];
+        int count = 0; // To keep track of the number of teams added to top5Teams
+
+        for (RobotTeam team : RobotTeam.AllTeams) {
+            if (team != null) {
+            for (int i = 0; i < top5Teams.length; i++) {
+                if (top5Teams[i] == null || team.getTotalPoints() > top5Teams[i].getTotalPoints()) {
+                // Shift lower ranked teams down
+                for (int j = top5Teams.length - 1; j > i; j--) {
+                    top5Teams[j] = top5Teams[j - 1];
+                }
+                top5Teams[i] = team;
+                count++;
+                break;
+                }
+            }
+            }
+        }
+
+        // If there are fewer than 5 teams, resize the array to fit the actual number of teams
+        if (count < 5) {
+            RobotTeam[] resizedTopTeams = new RobotTeam[count];
+            System.arraycopy(top5Teams, 0, resizedTopTeams, 0, count);
+            top5Teams = resizedTopTeams;
+        }
+
+        System.out.println("Calculated top " + count + " RobotTeams based on total points.");
+        return top5Teams;
+    }
     // Handling TSV Data
     public static String tsvFileToString(String filePath) throws IOException {
         try {

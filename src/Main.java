@@ -35,6 +35,7 @@ public class Main {
         // AwtyBots.displayTeamInfo();
         // Create instances of Matches
         // Removed unused variable match1
+        @SuppressWarnings("unused")
         Mainapp MainGUI = new Mainapp();
         //AwtyBots.displayTeamInfo();
 
