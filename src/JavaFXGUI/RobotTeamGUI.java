@@ -1,8 +1,9 @@
 package src.JavaFXGUI;
 
+import src.JavaFXGUI.GraphsFolder.ScatterGraphPanel;
 import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
-
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -31,6 +32,7 @@ public class RobotTeamGUI implements ActionListener {
         frame = new JFrame("Robot Team Details");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
+        frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 
         // Initialize the panel
         panel = new JPanel();
@@ -56,7 +58,8 @@ public class RobotTeamGUI implements ActionListener {
         JButton changeNameButton = new JButton("Change Name");
         changeNameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String newName = JOptionPane.showInputDialog(frame, "Enter new team name:", "Change Team Name", JOptionPane.PLAIN_MESSAGE);
+                String newName = JOptionPane.showInputDialog(frame, "Enter new team name:", "Change Team Name",
+                        JOptionPane.PLAIN_MESSAGE);
                 if (newName != null && !newName.trim().isEmpty()) {
                     robotTeam.setTeamName(newName);
                     teamNameLabel.setText(newName);
@@ -64,7 +67,7 @@ public class RobotTeamGUI implements ActionListener {
                 }
             }
         });
-       
+
         attributesList = new JList<>(listModel);
         scrollPane = new JScrollPane(attributesList);
         scrollPane.add(changeNameButton);
@@ -89,6 +92,11 @@ public class RobotTeamGUI implements ActionListener {
         robotImageIcon = new ImageIcon(scaledImage);
         robotImageLabel.setIcon(robotImageIcon);
         robotPanel.add(robotImageLabel, BorderLayout.CENTER);
+
+        java.util.List<Integer> matchPoints = java.util.List.of(10, 18, 12, 25, 20, 30);
+        ScatterGraphPanel graphPanel = new ScatterGraphPanel(matchPoints);
+        graphPanel.setPreferredSize(new Dimension(400, 300));
+        robotPanel.add(graphPanel, BorderLayout.SOUTH);
 
         // Add the panel to the frame
         frame.add(panel);
@@ -117,7 +125,7 @@ public class RobotTeamGUI implements ActionListener {
                 frame.dispose(); // Close the current frame
             }
         });
-        
+
     }
 
     @Override

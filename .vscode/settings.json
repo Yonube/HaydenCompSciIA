@@ -10,7 +10,8 @@
         "/Users/haydenroberts/Documents/javafx-sdk-24/lib/javafx.base.jar",
         "/Users/haydenroberts/Documents/javafx-sdk-24/lib/jfx.incubator.richtext.jar",
         "/Users/haydenroberts/Documents/javafx-sdk-24/lib/javafx-swt.jar",
-        "/Users/haydenroberts/Documents/javafx-sdk-24/lib/jdk.jsobject.jar"
+        "/Users/haydenroberts/Documents/javafx-sdk-24/lib/jdk.jsobject.jar",
+        "/Users/haydenroberts/Desktop/jfreechart-1.5.6/**/*.jar"
     ],
     "java.project.sourcePaths": [
         "."
