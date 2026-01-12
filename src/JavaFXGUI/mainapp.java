@@ -2,6 +2,7 @@ package src.JavaFXGUI;
 
 import src.Main;
 import src.JavaFXGUI.GraphsFolder.JFreeChartScatterGraphPanel;
+import src.JavaFXGUI.GraphsFolder.JFreePieChartPanel;
 import src.OOPBackEnd.*;
 import javax.swing.*;
 import java.awt.*;
@@ -81,10 +82,10 @@ public class Mainapp implements ActionListener {
 		// 	} else {
 		// 		topTeamPoints[i] = 0;
 		// 	}
-		// }
-		JFreeChartScatterGraphPanel centerGraph = new JFreeChartScatterGraphPanel(topTeamsList);
+		// 
+		JFreePieChartPanel centerGraph = new JFreePieChartPanel(topTeamsList, "Top 5 Teams by Total Points");
 		centerGraph.setBounds(320, 60, 780, 600);
-		centerGraph.setBorder(BorderFactory.createTitledBorder("Top Teams Scatter Graph"));
+		centerGraph.setBorder(BorderFactory.createTitledBorder("Top 5 Teams by Total Points"));
 		panel.add(centerGraph);
 		// System.out.println("Pie Chart Added");
 
@@ -281,49 +282,5 @@ public class Mainapp implements ActionListener {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static void addPieChart(int centerX, int centerY, int radius, int[] data) {
-		// Calculate the total sum of the data
-		java.util.concurrent.atomic.AtomicInteger total = new java.util.concurrent.atomic.AtomicInteger(0);
-		for (int value : data) {
-			total.addAndGet(value);
-		}
-
-		// Create a new JPanel to draw the pie chart
-		JPanel pieChartPanel = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				Graphics2D g2d = (Graphics2D) g;
-
-				// Set rendering hints for better quality
-				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-				// Start drawing the pie chart
-				int startAngle = 0;
-				for (int value : data) {
-					// Calculate the angle for this slice
-					int arcAngle = (int) Math.round((value * 360.0) / total.get());
-
-					// Generate a random color for each slice
-					g2d.setColor(new Color((int) (Math.random() * 0x1000000)));
-
-					// Draw the slice
-					g2d.fillArc(centerX - radius, centerY - radius, radius * 2, radius * 2, startAngle, arcAngle);
-
-					// Update the start angle for the next slice
-					startAngle += arcAngle;
-				}
-			}
-		};
-
-		// Set the size of the panel to fit the pie chart
-		pieChartPanel.setPreferredSize(new Dimension(centerX * 2, centerY * 2));
-
-		// Add the pie chart panel to the main panel
-		panel.add(pieChartPanel);
-		panel.revalidate();
-		panel.repaint();
 	}
 }

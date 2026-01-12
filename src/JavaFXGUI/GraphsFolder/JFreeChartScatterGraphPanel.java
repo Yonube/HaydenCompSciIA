@@ -31,7 +31,30 @@ public class JFreeChartScatterGraphPanel extends JPanel {
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setMouseWheelEnabled(true);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
+        chartPanel.setPreferredSize(new Dimension(600, 600));
+
+        setLayout(new BorderLayout());
+        add(chartPanel, BorderLayout.CENTER);
+    }
+    public JFreeChartScatterGraphPanel(List<Matches> data, RobotTeam team) {
+
+        XYSeries series = new XYSeries("Data Points");
+        for (int i = 0; i < data.size(); i++) {
+            Matches match = data.get(i);
+            series.add(match.getMatchNumber(), team.getTotalCoralPointsInMatch(match.getMatchNumber())+team.getTotalAlgaePointsInMatch(match.getMatchNumber()));
+        }
+
+        XYSeriesCollection dataset = new XYSeriesCollection(series);
+
+        JFreeChart chart = ChartFactory.createScatterPlot(
+                "Scatter Graph",
+                "X-Axis",
+                "Y-Axis",
+                dataset);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setMouseWheelEnabled(false);
+        chartPanel.setPreferredSize(new Dimension(600, 600));
 
         setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);

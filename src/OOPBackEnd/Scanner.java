@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import java.nio.file.Paths;
+import java.util.List;
 import javax.swing.*;
 
 import src.OOPBackEnd.ConstantsForScanner;
@@ -487,7 +488,7 @@ public class Scanner implements ActionListener{
             JButton skip = new JButton("Use Team Number?");
                 skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
             JPanel panel = new JPanel();
-            panel.add(new JLabel("Enter RobotTeam name:"));
+            panel.add(new JLabel("Team Number: "+ teamNumber + ". Please enter RobotTeam name:"));
             panel.add(teamNameField);
             panel.add(skip);
             frame.add(panel);
@@ -596,6 +597,19 @@ public class Scanner implements ActionListener{
         // Splits a single CSV row into an array of strings using comma as the delimiter
         String[] rowArray = csvRow.split(",");
         return rowArray;
+    }
+    public static List<Matches> matchesTeamIsIn(RobotTeam team) {
+        // Returns an array of Matches that the given RobotTeam is part of
+       java.util.List<Matches> teamMatches = new java.util.ArrayList<>();
+        for (Matches match : Matches.getAllMatches()) {
+            if (match != null) {
+                if (match.getRed1() == team || match.getRed2() == team || match.getRed3() == team ||
+                    match.getBlue1() == team || match.getBlue2() == team || match.getBlue3() == team) {
+                    teamMatches.add(match);
+                }
+            }
+        }
+        return teamMatches;
     }
 
     @Override

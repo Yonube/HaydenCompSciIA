@@ -1,6 +1,7 @@
 package src.JavaFXGUI;
-
-import src.JavaFXGUI.GraphsFolder.ScatterGraphPanel;
+import src.JavaFXGUI.GraphsFolder.JFreeChartScatterGraphPanel;
+import src.OOPBackEnd.Matches;
+import src.OOPBackEnd.Scanner;
 import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
 import java.util.*;
@@ -76,27 +77,37 @@ public class RobotTeamGUI implements ActionListener {
         // Initialize the robot panel
         robotPanel = new JPanel();
         robotPanel.setLayout(new BorderLayout());
-        panel.add(robotPanel, BorderLayout.CENTER);
 
         // Add a label for the robot image
         robotImageIcon = new ImageIcon("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".png");
         if (robotImageIcon.getIconWidth() == -1) { // Check if the image is invalid
             robotImageIcon = new ImageIcon("src/ImagesandSerialization/generic.png"); // Use generic image
         }
-        robotImageLabel = new JLabel(robotImageIcon);
+        robotImageLabel = new JLabel();
 
         // Scale the image to fit the window
-        imageWidth = 400;
+        imageWidth = 600;
         imageHeight = 400;
         Image scaledImage = robotImageIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
         robotImageIcon = new ImageIcon(scaledImage);
         robotImageLabel.setIcon(robotImageIcon);
-        robotPanel.add(robotImageLabel, BorderLayout.CENTER);
+        robotPanel.add(robotImageLabel, BorderLayout.NORTH);
 
-        java.util.List<Integer> matchPoints = java.util.List.of(10, 18, 12, 25, 20, 30);
-        ScatterGraphPanel graphPanel = new ScatterGraphPanel(matchPoints);
-        graphPanel.setPreferredSize(new Dimension(400, 300));
+        JFreeChartScatterGraphPanel graphPanel = new JFreeChartScatterGraphPanel(Scanner.matchesTeamIsIn(robotTeam), robotTeam);
         robotPanel.add(graphPanel, BorderLayout.SOUTH);
+
+        // Wrap the robotPanel in a container so the scroll pane sizes correctly
+        JPanel contentWrap = new JPanel(new BorderLayout());
+        contentWrap.add(robotPanel, BorderLayout.NORTH);
+        contentWrap.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Put everything into a scroll pane so the image/graph can be scrolled if needed
+        JScrollPane centerScrollPane = new JScrollPane(contentWrap,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        centerScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        panel.add(centerScrollPane, BorderLayout.CENTER);
 
         // Add the panel to the frame
         frame.add(panel);

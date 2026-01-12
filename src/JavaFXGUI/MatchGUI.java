@@ -18,6 +18,9 @@ public class MatchGUI implements ActionListener {
     @SuppressWarnings("unused")
     private JButton closeButton;
     
+    private final int imageWidth = 50;
+    private final int imageHeight = 50;
+    
     
     public MatchGUI(Matches match) {
         this.match = match;
@@ -48,6 +51,16 @@ public class MatchGUI implements ActionListener {
         listModel.addElement("Red Alliance Team 1: " + (match.getRed1() != null ? match.getRed1().getTeamName() : "null"));
         listModel.addElement("Red Alliance Team 2: " + (match.getRed2() != null ? match.getRed2().getTeamName() : "null"));
         listModel.addElement("Red Alliance Team 3: " + (match.getRed3() != null ? match.getRed3().getTeamName() : "null"));
+        if(match.getBlueScore() > match.getRedScore()) {
+            listModel.addElement("Winning Alliance: Blue");
+        } else if(match.getRedScore() > match.getBlueScore()) {
+            listModel.addElement("Winning Alliance: Red");
+        } else {
+            listModel.addElement("Winning Alliance: Tie");
+        }
+        listModel.addElement("Blue Alliance Score: " + match.getBlueScore());
+        listModel.addElement("Red Alliance Score: " + match.getRedScore());
+        
         //Add scores and include the winning alliance + ranking points + error if not all data has been entered
 
         // Create a JList to display the list model
@@ -62,14 +75,74 @@ public class MatchGUI implements ActionListener {
         closeButton.addActionListener(e -> frame.dispose());
         panel.add(closeButton, BorderLayout.SOUTH);
 
-        // Add image onto center of frame
-        JLabel imageLabel = new JLabel(new ImageIcon("src/ImagesandSerialization/2025_REEFSCAPE.png")); 
+        
+        // Create center panel for stuff
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+         // Add image onto center of frame
+    JLabel imageLabel = new JLabel(new ImageIcon("src/ImagesAndSerialization/2025_REEFSCAPE.png")); 
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        panel.add(imageLabel, BorderLayout.CENTER);
+        centerPanel.add(imageLabel, BorderLayout.CENTER);
+        // Add Red Alliance Images On the Side
+    JPanel RedImagePanel = new JPanel();
+    // Use a vertical box layout so the red-team icons stack tightly one above another
+    RedImagePanel.setLayout(new BoxLayout(RedImagePanel, BoxLayout.Y_AXIS));
+        //Red 1
+        if (match.getRed1() != null) {
+            ImageIcon red1Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed1().getTeamNumber()+".png");
+            if (red1Icon.getIconWidth() == -1) { // Check if the image is invalid
+                red1Icon = new ImageIcon("src/ImagesandSerialization/generic.png"); // Use generic image
+            }
+        // Scale the image to fit the window
+        Image scaledImage = red1Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+        red1Icon = new ImageIcon(scaledImage);
+        JLabel red1Label = new JLabel();
+        red1Label.setHorizontalAlignment(JLabel.CENTER);
+        red1Label.setIcon(red1Icon);
+        // Center alignment for BoxLayout
+        red1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        RedImagePanel.add(red1Label);
+        // small gap to keep icons close together
+        RedImagePanel.add(Box.createRigidArea(new Dimension(0,4)));
+        }
+        //Red 2
+        if (match.getRed2() != null) {
+            ImageIcon red2Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed2().getTeamNumber()+".png");
+            if (red2Icon.getIconWidth() == -1) { // Check if the image is invalid
+                red2Icon = new ImageIcon("src/ImagesAndSerialization/generic.png"); // Use generic image
+            }
+        // Scale the image to fit the window
+        Image scaledImage2 = red2Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+        red2Icon = new ImageIcon(scaledImage2);
+        JLabel red2Label = new JLabel();
+        red2Label.setHorizontalAlignment(JLabel.CENTER);
+        red2Label.setIcon(red2Icon);
+        red2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        RedImagePanel.add(red2Label);
+        RedImagePanel.add(Box.createRigidArea(new Dimension(0,4)));
+        }
+        // Red 3
+        if (match.getRed3() != null) {
+            ImageIcon red3Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed3().getTeamNumber()+".png");
+            if (red3Icon.getIconWidth() == -1) { // Check if the image is invalid
+                red3Icon = new ImageIcon("src/ImagesAndSerialization/generic.png"); // Use generic image
+            }
+        // Scale the image to fit the window
+        Image scaledImage3 = red3Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+        red3Icon = new ImageIcon(scaledImage3);
+        JLabel red3Label = new JLabel();
+        red3Label.setHorizontalAlignment(JLabel.CENTER);
+        red3Label.setIcon(red3Icon);
+        red3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        RedImagePanel.add(red3Label);
+        }
 
+    // Add the RedImagePanel to the right of the center panel so it becomes visible
+    centerPanel.add(RedImagePanel, BorderLayout.EAST);
 
-        // Add the panel to the frame
-        frame.add(panel);
+    // Add the panel to the frame
+    frame.add(panel);
+    panel.add(centerPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
     
