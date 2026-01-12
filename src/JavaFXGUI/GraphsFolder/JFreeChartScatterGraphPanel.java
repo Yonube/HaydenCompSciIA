@@ -1,3 +1,5 @@
+package src.JavaFXGUI.GraphsFolder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -7,13 +9,16 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import src.OOPBackEnd.*;
+
 public class JFreeChartScatterGraphPanel extends JPanel {
 
-    public JFreeChartScatterGraphPanel(List<Integer> data) {
+    public JFreeChartScatterGraphPanel(List<RobotTeam> data) {
 
         XYSeries series = new XYSeries("Data Points");
         for (int i = 0; i < data.size(); i++) {
-            series.add(i, data.get(i));
+            RobotTeam team = data.get(i);
+            series.add(i, team.getTotalCoralPoints());
         }
 
         XYSeriesCollection dataset = new XYSeriesCollection(series);
@@ -30,33 +35,5 @@ public class JFreeChartScatterGraphPanel extends JPanel {
 
         setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);
-    }
-}
-
-public class JFreeChartScatterGraphPanel extends JPanel {
-    public JFreeChartScatterGraphPanel(List<Integer> data) {
-        // Create a dataset
-        XYSeries series = new XYSeries("Data Points");
-        for (int i = 0; i < data.size(); i++) {
-            series.add(i, data.get(i));
-        }
-        XYSeriesCollection dataset = new XYSeriesCollection(series);
-
-        // Create the scatter plot
-        JFreeChart scatterPlot = ChartFactory.createScatterPlot(
-                "Scatter Graph", // Title
-                "X-Axis", // X-Axis Label
-                "Y-Axis", // Y-Axis Label
-                dataset // Dataset
-        );
-
-        // Create and set up the panel
-        ChartPanel chartPanel = new ChartPanel(scatterPlot);
-        chartPanel.setMouseWheelEnabled(true);
-        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-
-        // Add the chart panel to this panel
-        this.setLayout(new java.awt.BorderLayout());
-        this.add(chartPanel, java.awt.BorderLayout.CENTER);
     }
 }

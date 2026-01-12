@@ -5,22 +5,7 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
-            "mainClass": "src.Main",
-            "projectName": "HaydenCompSciIA-Old_526c00bb"
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "src.Main",
-            "projectName": "HaydenCompSciIA_e6865d3e"
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "src.Main",
-            "projectName": "HaydenCompSciIA_e92b7e81"
+            "mainClass": "src.Main"
         }
     ]
 }

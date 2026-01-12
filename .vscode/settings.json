@@ -1,8 +1,7 @@
 {
     "java.project.referencedLibraries": [
-        "/Users/haydenroberts/Documents/jfreechart-1.5.6/lib/*.jar",
-        "/Users/haydenroberts/Documents/jfreechart-1.5.6/**/*.jar",
-        "jfreechart-1.5.6/**/*.jar"
+        "",
+        "/Users/haydenroberts/Documents/jfreechart-1.5.6/jfreechart.jar"
     ],
     "java.project.sourcePaths": [
         "."
