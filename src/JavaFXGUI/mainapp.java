@@ -46,33 +46,25 @@ public class Mainapp implements ActionListener {
 		titleLabel.setBounds(500, 10, 500, 45);
 		panel.add(titleLabel);
 
-		JTextField mouseCoordinates = new JTextField("Mouse Coordinates: (0, 0)");
-		mouseCoordinates.setHorizontalAlignment(JTextField.CENTER);
-		mouseCoordinates.setFont(new Font("Arial", Font.PLAIN, 16));
-		mouseCoordinates.setEditable(false);
-		mouseCoordinates.setBounds(200, 0, 200, 30); // Position at the center of the panel
-		panel.add(mouseCoordinates);
+		// JTextField mouseCoordinates = new JTextField("Mouse Coordinates: (0, 0)");
+		// mouseCoordinates.setHorizontalAlignment(JTextField.CENTER);
+		// mouseCoordinates.setFont(new Font("Arial", Font.PLAIN, 16));
+		// mouseCoordinates.setEditable(false);
+		// mouseCoordinates.setBounds(200, 0, 200, 30); // Position at the center of the panel
+		// panel.add(mouseCoordinates);
 
 		// Add a MouseMotionListener to track mouse movement (Temporary)
-		panel.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				int x = e.getX();
-				int y = e.getY();
-				mouseCoordinates.setText("Mouse Coordinates: (" + x + ", " + y + ")");
-			}
-		});
+		// panel.addMouseMotionListener(new MouseMotionAdapter() {
+		// 	@Override
+		// 	public void mouseMoved(MouseEvent e) {
+		// 		int x = e.getX();
+		// 		int y = e.getY();
+		// 		mouseCoordinates.setText("Mouse Coordinates: (" + x + ", " + y + ")");
+		// 	}
+		// });
 
 		// Create Pie Chart For Top 5 Teams By Points
-		RobotTeam[] topTeams = Scanner.calculateUpToTop5RobotTeams();
-		java.util.List<RobotTeam> topTeamsList = new java.util.ArrayList<>();
-		if (topTeams != null) {
-			for (RobotTeam rt : topTeams) {
-				if (rt != null) {
-					topTeamsList.add(rt);
-				}
-			}
-		}
+		
 		// RobotTeamPoints[] topTeams = []
 		// System.out.println(topTeams + " " + topTeams.length);
 		// int[] topTeamPoints = new int[topTeams.length];
@@ -83,6 +75,15 @@ public class Mainapp implements ActionListener {
 		// 		topTeamPoints[i] = 0;
 		// 	}
 		// 
+		RobotTeam[] topTeams = Scanner.calculateUpToTop5RobotTeams();
+		java.util.List<RobotTeam> topTeamsList = new java.util.ArrayList<>();
+		if (topTeams != null) {
+			for (RobotTeam rt : topTeams) {
+				if (rt != null) {
+					topTeamsList.add(rt);
+				}
+			}
+		}
 		JFreePieChartPanel centerGraph = new JFreePieChartPanel(topTeamsList, "Top 5 Teams by Total Points");
 		centerGraph.setBounds(320, 60, 780, 600);
 		centerGraph.setBorder(BorderFactory.createTitledBorder("Top 5 Teams by Total Points"));

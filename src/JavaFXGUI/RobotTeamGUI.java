@@ -1,4 +1,5 @@
 package src.JavaFXGUI;
+import src.JavaFXGUI.GraphsFolder.JFreeBarChartPanel;
 import src.JavaFXGUI.GraphsFolder.JFreeChartScatterGraphPanel;
 import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.Scanner;
@@ -86,14 +87,16 @@ public class RobotTeamGUI implements ActionListener {
         robotImageLabel = new JLabel();
 
         // Scale the image to fit the window
-        imageWidth = 600;
+        imageWidth = 500;
         imageHeight = 400;
         Image scaledImage = robotImageIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
         robotImageIcon = new ImageIcon(scaledImage);
         robotImageLabel.setIcon(robotImageIcon);
         robotPanel.add(robotImageLabel, BorderLayout.NORTH);
 
-        JFreeChartScatterGraphPanel graphPanel = new JFreeChartScatterGraphPanel(Scanner.matchesTeamIsIn(robotTeam), robotTeam);
+        //JFreeChartScatterGraphPanel graphPanel = new JFreeChartScatterGraphPanel(Scanner.matchesTeamIsIn(robotTeam), robotTeam);
+        JFreeBarChartPanel graphPanel = JFreeBarChartPanel.fromMatches(Scanner.matchesTeamIsIn(robotTeam), 
+            "Points Scored Per Match By: " + robotTeam.getTeamNumber() + " - " + robotTeam.getTeamName(), robotTeam);
         robotPanel.add(graphPanel, BorderLayout.SOUTH);
 
         // Wrap the robotPanel in a container so the scroll pane sizes correctly
