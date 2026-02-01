@@ -46,35 +46,7 @@ public class Mainapp implements ActionListener {
 		titleLabel.setBounds(500, 10, 500, 45);
 		panel.add(titleLabel);
 
-		// JTextField mouseCoordinates = new JTextField("Mouse Coordinates: (0, 0)");
-		// mouseCoordinates.setHorizontalAlignment(JTextField.CENTER);
-		// mouseCoordinates.setFont(new Font("Arial", Font.PLAIN, 16));
-		// mouseCoordinates.setEditable(false);
-		// mouseCoordinates.setBounds(200, 0, 200, 30); // Position at the center of the panel
-		// panel.add(mouseCoordinates);
-
-		// Add a MouseMotionListener to track mouse movement (Temporary)
-		// panel.addMouseMotionListener(new MouseMotionAdapter() {
-		// 	@Override
-		// 	public void mouseMoved(MouseEvent e) {
-		// 		int x = e.getX();
-		// 		int y = e.getY();
-		// 		mouseCoordinates.setText("Mouse Coordinates: (" + x + ", " + y + ")");
-		// 	}
-		// });
-
-		// Create Pie Chart For Top 5 Teams By Points
 		
-		// RobotTeamPoints[] topTeams = []
-		// System.out.println(topTeams + " " + topTeams.length);
-		// int[] topTeamPoints = new int[topTeams.length];
-		// for (int i = 0; i < topTeams.length; i++) {
-		// 	if (topTeams[i] != null) {
-		// 		topTeamPoints[i] = topTeams[i].getTotalCoralPoints() + topTeams[i].getTotalAlgaePoints();
-		// 	} else {
-		// 		topTeamPoints[i] = 0;
-		// 	}
-		// 
 		RobotTeam[] topTeams = Scanner.calculateUpToTop5RobotTeams();
 		java.util.List<RobotTeam> topTeamsList = new java.util.ArrayList<>();
 		if (topTeams != null) {
@@ -285,3 +257,35 @@ public class Mainapp implements ActionListener {
 		}
 	}
 }
+
+
+
+// JTextField mouseCoordinates = new JTextField("Mouse Coordinates: (0, 0)");
+		// mouseCoordinates.setHorizontalAlignment(JTextField.CENTER);
+		// mouseCoordinates.setFont(new Font("Arial", Font.PLAIN, 16));
+		// mouseCoordinates.setEditable(false);
+		// mouseCoordinates.setBounds(200, 0, 200, 30); // Position at the center of the panel
+		// panel.add(mouseCoordinates);
+
+		// Add a MouseMotionListener to track mouse movement (Temporary)
+		// panel.addMouseMotionListener(new MouseMotionAdapter() {
+		// 	@Override
+		// 	public void mouseMoved(MouseEvent e) {
+		// 		int x = e.getX();
+		// 		int y = e.getY();
+		// 		mouseCoordinates.setText("Mouse Coordinates: (" + x + ", " + y + ")");
+		// 	}
+		// });
+
+		// Create Pie Chart For Top 5 Teams By Points
+		
+		// RobotTeamPoints[] topTeams = []
+		// System.out.println(topTeams + " " + topTeams.length);
+		// int[] topTeamPoints = new int[topTeams.length];
+		// for (int i = 0; i < topTeams.length; i++) {
+		// 	if (topTeams[i] != null) {
+		// 		topTeamPoints[i] = topTeams[i].getTotalCoralPoints() + topTeams[i].getTotalAlgaePoints();
+		// 	} else {
+		// 		topTeamPoints[i] = 0;
+		// 	}
+		// 
