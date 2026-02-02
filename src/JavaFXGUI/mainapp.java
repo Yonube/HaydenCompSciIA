@@ -93,48 +93,6 @@ public class Mainapp implements ActionListener {
 			});
 
 		}
-		// Add a button to add a new robot team
-		// addTeamButton = new JButton("+");
-		// System.out.println("Add Team Button Created");
-		// addTeamButton.setFont(new Font("Arial", Font.PLAIN, 32));
-		// System.out.println("Add Team Button Font Set");
-		// robotTeamsPanel.add(addTeamButton);
-		// System.out.println("Add Team Button Added to Panel");
-		// addTeamButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-		// addTeamButton.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent event) {
-		// JPanel inputPanel = new JPanel(new GridLayout(2, 2));
-		// JTextField teamNameField = new JTextField();
-		// JTextField teamNumberField = new JTextField();
-
-		// inputPanel.add(new JLabel("Team Name:"));
-		// inputPanel.add(teamNameField);
-		// inputPanel.add(new JLabel("Team Number:"));
-		// inputPanel.add(teamNumberField);
-
-		// int result = JOptionPane.showConfirmDialog(null, inputPanel, "Add Robot
-		// Team", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-		// if (result == JOptionPane.OK_OPTION) {
-		// String teamName = teamNameField.getText();
-		// String teamNumber = teamNumberField.getText();
-		// try {
-		// java.util.Scanner tempscanner = new java.util.Scanner("");
-		// Scanner.createNewRobotTeam(Integer.parseInt(teamNumber), teamName,
-		// tempscanner);
-		// refresh(); // Refresh the GUI to show the new team
-		// tempscanner.close();
-		// } catch (NumberFormatException ex) {
-		// JOptionPane.showMessageDialog(null, "Invalid team number. Please enter a
-		// valid number.", "Error", JOptionPane.ERROR_MESSAGE);
-		// } catch (Exception ex) {
-		// JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(),
-		// "Error", JOptionPane.ERROR_MESSAGE);
-		// }
-		// }
-		// }
-		// });
 		// Create a scrollable panel for Matches
 		matchesPanel = new JPanel();
 		matchesPanel.setLayout(new BoxLayout(matchesPanel, BoxLayout.Y_AXIS));
@@ -235,7 +193,7 @@ public class Mainapp implements ActionListener {
 
 	public static void handlefileInput() {
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("TSV Files", "tsv"));
+		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("TSV/CSV Files", "tsv", "csv", "txt", "xls", "xlsx"));
 		int returnValue = fileChooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
@@ -289,3 +247,46 @@ public class Mainapp implements ActionListener {
 		// 		topTeamPoints[i] = 0;
 		// 	}
 		// 
+
+		// Add a button to add a new robot team
+		// addTeamButton = new JButton("+");
+		// System.out.println("Add Team Button Created");
+		// addTeamButton.setFont(new Font("Arial", Font.PLAIN, 32));
+		// System.out.println("Add Team Button Font Set");
+		// robotTeamsPanel.add(addTeamButton);
+		// System.out.println("Add Team Button Added to Panel");
+		// addTeamButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+		// addTeamButton.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent event) {
+		// JPanel inputPanel = new JPanel(new GridLayout(2, 2));
+		// JTextField teamNameField = new JTextField();
+		// JTextField teamNumberField = new JTextField();
+
+		// inputPanel.add(new JLabel("Team Name:"));
+		// inputPanel.add(teamNameField);
+		// inputPanel.add(new JLabel("Team Number:"));
+		// inputPanel.add(teamNumberField);
+
+		// int result = JOptionPane.showConfirmDialog(null, inputPanel, "Add Robot
+		// Team", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		// if (result == JOptionPane.OK_OPTION) {
+		// String teamName = teamNameField.getText();
+		// String teamNumber = teamNumberField.getText();
+		// try {
+		// java.util.Scanner tempscanner = new java.util.Scanner("");
+		// Scanner.createNewRobotTeam(Integer.parseInt(teamNumber), teamName,
+		// tempscanner);
+		// refresh(); // Refresh the GUI to show the new team
+		// tempscanner.close();
+		// } catch (NumberFormatException ex) {
+		// JOptionPane.showMessageDialog(null, "Invalid team number. Please enter a
+		// valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+		// } catch (Exception ex) {
+		// JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(),
+		// "Error", JOptionPane.ERROR_MESSAGE);
+		// }
+		// }
+		// }
+		// });

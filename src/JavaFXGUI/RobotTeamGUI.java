@@ -80,7 +80,21 @@ public class RobotTeamGUI implements ActionListener {
         robotPanel.setLayout(new BorderLayout());
 
         // Add a label for the robot image
-        robotImageIcon = new ImageIcon("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".png");
+        // Try .png, then .jpeg, then .jpg; fall back to generic if none found
+        java.io.File pngFile = new java.io.File("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".png");
+        java.io.File jpegFile = new java.io.File("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".jpeg");
+        java.io.File jpgFile = new java.io.File("src/ImagesandSerialization/" + robotTeam.getTeamNumber() + ".jpg");
+        String imagePath;
+        if (pngFile.exists()) {
+            imagePath = pngFile.getPath();
+        } else if (jpegFile.exists()) {
+            imagePath = jpegFile.getPath();
+        } else if (jpgFile.exists()) {
+            imagePath = jpgFile.getPath();
+        } else {
+            imagePath = "src/ImagesandSerialization/generic.png";
+        }
+        robotImageIcon = new ImageIcon(imagePath);
         if (robotImageIcon.getIconWidth() == -1) { // Check if the image is invalid
             robotImageIcon = new ImageIcon("src/ImagesandSerialization/generic.png"); // Use generic image
         }
