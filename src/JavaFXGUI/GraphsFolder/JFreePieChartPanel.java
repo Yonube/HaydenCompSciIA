@@ -1,5 +1,7 @@
 package src.JavaFXGUI.GraphsFolder;
 import javax.swing.*;
+
+import java.awt.event.MouseListener;
 import java.util.List;
 import src.OOPBackEnd.RobotTeam;
 import org.jfree.data.general.PieDataset;
@@ -18,7 +20,7 @@ public class JFreePieChartPanel extends JPanel {
                 if (rt == null) {
                     continue;
                 }
-                String key = rt.getTeamNumber() + " - " + rt.getTeamName();
+                String key = "Name: " + rt.getTeamNumber() + " Number: " + rt.getTeamName() + "  Total Points: " + rt.getTotalPoints();
                 int points = rt.getTotalCoralPoints() + rt.getTotalAlgaePoints();
                 dataset.setValue(key, points);
             }

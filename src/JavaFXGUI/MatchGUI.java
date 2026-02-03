@@ -45,12 +45,12 @@ public class MatchGUI implements ActionListener {
         // Create a list to display match attributes
         DefaultListModel<String> listModel = new DefaultListModel<>();
         listModel.addElement("Match Number: " + match.getMatchNumber());
-        listModel.addElement("Blue Alliance Team 1: " + (match.getBlue1() != null ? match.getBlue1().getTeamName() : "null"));
-        listModel.addElement("Blue Alliance Team 2: " + (match.getBlue2() != null ? match.getBlue2().getTeamName() : "null"));
-        listModel.addElement("Blue Alliance Team 3: " + (match.getBlue3() != null ? match.getBlue3().getTeamName() : "null"));
-        listModel.addElement("Red Alliance Team 1: " + (match.getRed1() != null ? match.getRed1().getTeamName() : "null"));
-        listModel.addElement("Red Alliance Team 2: " + (match.getRed2() != null ? match.getRed2().getTeamName() : "null"));
-        listModel.addElement("Red Alliance Team 3: " + (match.getRed3() != null ? match.getRed3().getTeamName() : "null"));
+        listModel.addElement("Blue Alliance Team 1: " + (match.getBlue1() != null ? match.getBlue1().getTeamNumber() : "null"));
+        listModel.addElement("Blue Alliance Team 2: " + (match.getBlue2() != null ? match.getBlue2().getTeamNumber() : "null"));
+        listModel.addElement("Blue Alliance Team 3: " + (match.getBlue3() != null ? match.getBlue3().getTeamNumber() : "null"));
+        listModel.addElement("Red Alliance Team 1: " + (match.getRed1() != null ? match.getRed1().getTeamNumber() : "null"));
+        listModel.addElement("Red Alliance Team 2: " + (match.getRed2() != null ? match.getRed2().getTeamNumber() : "null"));
+        listModel.addElement("Red Alliance Team 3: " + (match.getRed3() != null ? match.getRed3().getTeamNumber() : "null"));
         if(match.getBlueScore() > match.getRedScore()) {
             listModel.addElement("Winning Alliance: Blue");
         } else if(match.getRedScore() > match.getBlueScore()) {

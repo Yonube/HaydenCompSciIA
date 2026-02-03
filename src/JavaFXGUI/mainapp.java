@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Mainapp implements ActionListener {
+public class Mainapp {
 	private static JFrame frame;
 	private static JPanel panel;
 	private static JLabel titleLabel;
@@ -27,6 +27,8 @@ public class Mainapp implements ActionListener {
 	private static JButton inputFileButton;
 	public static int width = 1500;
 	public static int height = 900;
+	public static final Color backgroundcolor = Color.LIGHT_GRAY;
+	public static final Color textColor = Color.WHITE;
 
 	public Mainapp() {
 		frame = new JFrame();
@@ -37,11 +39,13 @@ public class Mainapp implements ActionListener {
 
 	public static void showMainAppGUI() {
 		panel = new JPanel();
+		panel.setBackground(backgroundcolor);
 		frame.add(panel);
 		panel.setLayout(null);
 
 		titleLabel = new JLabel(" Robotics Scouter App");
 		titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
+		titleLabel.setForeground(textColor);
 		// titleLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		titleLabel.setBounds(500, 10, 500, 45);
 		panel.add(titleLabel);
@@ -115,17 +119,16 @@ public class Mainapp implements ActionListener {
 				matchButton.setForeground(Color.GRAY);
 			}
 			matchesPanel.add(matchButton);
-			matchButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent r) {
-					@SuppressWarnings("unused")
-					MatchGUI matchGUI = new MatchGUI(Matches.getAllMatches()[matchIndex]); // Assuming MatchGUI takes a
-																							// match object
-
+			matchButton.addActionListener(r -> {
+				try {
+					new MatchGUI(Matches.getAllMatches()[matchIndex]); // Open the match GUI
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(frame, "An error occurred opening the match: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
-
 		}
+
 		refreshButton = new JButton("Refresh");
 		refreshButton.setFont(new Font("Arial", Font.PLAIN, 32));
 		refreshButton.setBounds(1180, 0, 300, 50);
@@ -171,10 +174,6 @@ public class Mainapp implements ActionListener {
 
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	}
-
 	public static void refresh() {
 		// Clear the content pane of the frame
 
@@ -190,31 +189,56 @@ public class Mainapp implements ActionListener {
 		Main.rtList.serialize();
 		Main.mList.serialize();
 	}
-
 	public static void handlefileInput() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("TSV/CSV Files", "tsv", "csv", "txt", "xls", "xlsx"));
 		int returnValue = fileChooser.showOpenDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
-			try {
-				java.util.List<String> lines = Files.readAllLines(Path.of(selectedFile.getAbsolutePath()));
+		if (returnValue != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+
+		File selectedFile = fileChooser.getSelectedFile();
+		if (selectedFile == null || !selectedFile.exists()) {
+			JOptionPane.showMessageDialog(frame, "The selected file does not exist.", "File not found", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		String name = selectedFile.getName().toLowerCase();
+		try {
+			java.util.List<String> lines = Files.readAllLines(selectedFile.toPath());
+
+			if (name.endsWith(".tsv")) {
 				for (String line : lines) {
 					try {
-						Scanner.FileDataToRobotTeam(line, frame);
+						Scanner.FileDataToRobotTeamTSV(line, frame);
 					} catch (Exception ex) {
 						System.err.println("An error occurred while processing line: " + line);
 						ex.printStackTrace();
 					}
 				}
 				refresh();
-			} catch (IOException e) {
-				System.err.println("An error occurred while reading the file: " + e.getMessage());
-				e.printStackTrace();
+				return;
+			} else if (name.endsWith(".csv")) {
+				for (String line : lines) {
+					try {
+						Scanner.FileDataToRobotTeamCSV(line, frame);
+					} catch (Exception ex) {
+						System.err.println("An error occurred while processing line: " + line);
+						ex.printStackTrace();
+					}
+				}
+				refresh();
+				return;
+			} else {
+				JOptionPane.showMessageDialog(frame, "Selected file type is not yet supported. Please use a .tsv or .csv file.", "Unsupported file type", JOptionPane.WARNING_MESSAGE);
+				return;
 			}
+		} catch (IOException e) {
+			System.err.println("An error occurred while reading the file: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
-}
+	}
 
 
 

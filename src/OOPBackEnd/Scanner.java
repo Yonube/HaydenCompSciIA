@@ -59,6 +59,29 @@ public class Scanner implements ActionListener{
         Scanner.scannedData = scannedData;
     }
 
+    // Safely parse integers from scanned strings. Handles values like "3.0"
+    private static int parseIntSafe(String s) {
+        if (s == null) return 0;
+        s = s.trim();
+        if (s.length() == 0) return 0;
+        // If it's a floating representation of an integer like "3.0", strip the decimal
+        if (s.endsWith(".0")) {
+            s = s.substring(0, s.length() - 2);
+            if (s.length() == 0) return 0;
+        }
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            try {
+                double d = Double.parseDouble(s);
+                return (int) Math.round(d);
+            } catch (NumberFormatException ex) {
+                // As a last resort, return 0
+                return 0;
+            }
+        }
+    }
+
     public static int getTeamNumber() {
         return TeamNumber;
     }
@@ -85,12 +108,19 @@ public class Scanner implements ActionListener{
         Scanner.clear();
     }
 
-    public static void FileDataToRobotTeam(String inputedData, JFrame frame){
-        Scanner.processScannedData(inputedData,frame);
+    public static void FileDataToRobotTeamTSV(String inputedData, JFrame frame){
+        Scanner.processScannedData(inputedData,frame, "tab");
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
         Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
         Scanner.clear();
     }
+    public static void FileDataToRobotTeamCSV(String inputedData, JFrame frame){
+        Scanner.processScannedData(inputedData,frame, "comma");
+        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
+        Scanner.clear();
+    }
+
     public static void processScannedData(String inputFromQR,java.util.Scanner scanner) {
         // Process the scanned data
         System.out.println("Processing scanned data: ");
@@ -98,10 +128,10 @@ public class Scanner implements ActionListener{
         Scanner.setScannedData(inputFromQR.split("\t"));
         System.out.println("Split data");
         // Get match number
-        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
         // Team Number
-        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
         // Robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
@@ -111,32 +141,32 @@ public class Scanner implements ActionListener{
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
                 // Auton Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
                         // Auton Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
                         // Auton Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
                         // Teleop Coral L1
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
                         // Teleop Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
                         // Teleop Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
                         // Teleop Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
                 // Auton Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
                         // Teleop Algae Barge
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
                         // Teleop Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;
@@ -163,20 +193,25 @@ public class Scanner implements ActionListener{
 
     }
 
-    public static void processScannedData(String inputFromQR, JFrame frame) {
+    public static void processScannedData(String inputFromQR, JFrame frame, String delimiter) {
         // Process the scanned data and update the robot's state
         // For example, you might want to parse the scanned data and update the robot's
         // attributes
         System.out.println("Processing scanned data: ");
         // Split the scanned data into an array
-        Scanner.setScannedData(inputFromQR.split("\t"));
+        if (delimiter.equals("tab")) {
+            delimiter = "\t";
+        } else if (delimiter.equals("comma")) {
+            delimiter = ",";
+        }
+        Scanner.setScannedData(inputFromQR.split(delimiter));
         System.out.println("Split data");
         // Get match number
-        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
 
         // Team Number
-        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
 
         // Robot
@@ -192,32 +227,32 @@ public class Scanner implements ActionListener{
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
                 // Auton Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
                         // Auton Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
                         // Auton Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
                         // Teleop Coral L1
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
                         // Teleop Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
                         // Teleop Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
                         // Teleop Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
                 // Auton Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
                         // Teleop Algae Barge
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
                         // Teleop Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;
@@ -252,11 +287,11 @@ public class Scanner implements ActionListener{
         // Split the scanned data into an array
         Scanner.setScannedData(inputFromFile);
         // Get match number
-        matchNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
 
         // Team Number
-        TeamNumber = Integer.parseInt(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
 
         // Robot
@@ -272,32 +307,32 @@ public class Scanner implements ActionListener{
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL1()]) +
                 // Auton Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL2()]) +
                         // Auton Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL3()]) +
                         // Auton Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonCoralL4()]) +
                         // Teleop Coral L1
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL1()]) +
                         // Teleop Coral L2
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL2()]) +
                         // Teleop Coral L3
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL3()]) +
                         // Teleop Coral L4
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopCoralL4()]);
         System.out.println("Got Coral Points: " + TotalCoralPoints);
         // Algae Points
         TotalAlgaePoints =
                 // Auton Algae Barge
-                Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
+                parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeBarge()]) +
                 // Auton Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getAutonAlgaeProcessor()]) +
                         // Teleop Algae Barge
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeBarge()]) +
                         // Teleop Algae Processor
-                        Integer.parseInt(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
+                        parseIntSafe(getScannedData()[ConstantsForScanner.getTeleopAlgaeProcessor()]);
         System.out.println("Got Algae Points: " + TotalAlgaePoints);
         // Total Points
         TotalPoints = TotalCoralPoints + TotalAlgaePoints;

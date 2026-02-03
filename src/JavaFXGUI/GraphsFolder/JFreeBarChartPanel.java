@@ -16,7 +16,6 @@ public class JFreeBarChartPanel extends JPanel {
     private JFreeBarChartPanel() {
         setLayout(new BorderLayout());
     }
-
     
     public static JFreeBarChartPanel fromRobotTeams(
             List<RobotTeam> data, String chartTitle) {
