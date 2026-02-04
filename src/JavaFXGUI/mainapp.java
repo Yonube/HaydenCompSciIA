@@ -150,12 +150,12 @@ public class Mainapp {
 			public void actionPerformed(ActionEvent e) {
 				String inputData = inputDataField.getText();
 				try {
-					Scanner.QRdataToRobotTeam(inputData, new java.util.Scanner(System.in));
-					refresh();
-				} catch (Exception ex) {
-					System.err.println("An error occurred: " + ex.getMessage());
-					ex.printStackTrace();
-				}
+						Scanner.FileDataToRobotTeamTSV(inputData, frame);
+						refresh();
+					} catch (Exception ex) {
+						System.err.println("An error occurred while processing line: " + inputData);
+						ex.printStackTrace();
+					}
 			}
 		});
 		inputFileButton = new JButton("Input File");

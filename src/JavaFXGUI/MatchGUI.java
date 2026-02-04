@@ -1,5 +1,6 @@
 package src.JavaFXGUI;
 import src.OOPBackEnd.Matches;
+import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -27,6 +28,20 @@ public class MatchGUI implements ActionListener {
         setupGUI();
     }
 
+    // Simple helper to get coral, algae and total points for a team at a match
+    private int[] getTeamPoints(RobotTeam team, int matchNum) {
+        int[] pts = new int[]{0,0,0}; // coral, algae, total
+        if (team == null) return pts;
+        try {
+            pts[0] = team.getTotalCoralPointsInMatch(matchNum);
+        } catch (Exception e) { pts[0] = 0; }
+        try {
+            pts[1] = team.getTotalAlgaePointsInMatch(matchNum);
+        } catch (Exception e) { pts[1] = 0; }
+        pts[2] = pts[0] + pts[1];
+        return pts;
+    }
+
     public void setupGUI() {
         // Create the frame
         frame = new JFrame("Match Details");
@@ -44,22 +59,95 @@ public class MatchGUI implements ActionListener {
 
         // Create a list to display match attributes
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        listModel.addElement("Match Number: " + match.getMatchNumber());
-        listModel.addElement("Blue Alliance Team 1: " + (match.getBlue1() != null ? match.getBlue1().getTeamNumber() : "null"));
-        listModel.addElement("Blue Alliance Team 2: " + (match.getBlue2() != null ? match.getBlue2().getTeamNumber() : "null"));
-        listModel.addElement("Blue Alliance Team 3: " + (match.getBlue3() != null ? match.getBlue3().getTeamNumber() : "null"));
-        listModel.addElement("Red Alliance Team 1: " + (match.getRed1() != null ? match.getRed1().getTeamNumber() : "null"));
-        listModel.addElement("Red Alliance Team 2: " + (match.getRed2() != null ? match.getRed2().getTeamNumber() : "null"));
-        listModel.addElement("Red Alliance Team 3: " + (match.getRed3() != null ? match.getRed3().getTeamNumber() : "null"));
-        if(match.getBlueScore() > match.getRedScore()) {
+        int mNum = match.getMatchNumber();
+        listModel.addElement("Match Number: " + mNum);
+
+        int blueTotal = 0;
+        int redTotal = 0;
+
+        // Blue teams
+        if (match.getBlue1() != null) {
+            listModel.addElement("Blue Alliance Team 1: " + match.getBlue1().getTeamNumber());
+            int[] p = getTeamPoints(match.getBlue1(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            blueTotal += p[2];
+        } else {
+            listModel.addElement("Blue Alliance Team 1: null");
+        }
+
+        if (match.getBlue2() != null) {
+            listModel.addElement("Blue Alliance Team 2: " + match.getBlue2().getTeamNumber());
+            int[] p = getTeamPoints(match.getBlue2(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            blueTotal += p[2];
+        } else {
+            listModel.addElement("Blue Alliance Team 2: null");
+        }
+
+        if (match.getBlue3() != null) {
+            listModel.addElement("Blue Alliance Team 3: " + match.getBlue3().getTeamNumber());
+            int[] p = getTeamPoints(match.getBlue3(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            blueTotal += p[2];
+        } else {
+            listModel.addElement("Blue Alliance Team 3: null");
+        }
+
+        // Red teams
+        if (match.getRed1() != null) {
+            listModel.addElement("Red Alliance Team 1: " + match.getRed1().getTeamNumber());
+            int[] p = getTeamPoints(match.getRed1(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            redTotal += p[2];
+        } else {
+            listModel.addElement("Red Alliance Team 1: null");
+        }
+
+        if (match.getRed2() != null) {
+            listModel.addElement("Red Alliance Team 2: " + match.getRed2().getTeamNumber());
+            int[] p = getTeamPoints(match.getRed2(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            redTotal += p[2];
+        } else {
+            listModel.addElement("Red Alliance Team 2: null");
+        }
+
+        if (match.getRed3() != null) {
+            listModel.addElement("Red Alliance Team 3: " + match.getRed3().getTeamNumber());
+            int[] p = getTeamPoints(match.getRed3(), mNum);
+            listModel.addElement("- Coral Points: " + p[0]);
+            listModel.addElement("- Algae Points: " + p[1]);
+            listModel.addElement("- Total Points: " + p[2]);
+            redTotal += p[2];
+        } else {
+            listModel.addElement("Red Alliance Team 3: null");
+        }
+
+        // Update match scores from stored per-team points and display
+        match.setBlueScore(blueTotal);
+        match.setRedScore(redTotal);
+
+        
+
+        if(blueTotal > redTotal) {
             listModel.addElement("Winning Alliance: Blue");
-        } else if(match.getRedScore() > match.getBlueScore()) {
+        } else if(redTotal > blueTotal) {
             listModel.addElement("Winning Alliance: Red");
         } else {
             listModel.addElement("Winning Alliance: Tie");
         }
-        listModel.addElement("Blue Alliance Score: " + match.getBlueScore());
-        listModel.addElement("Red Alliance Score: " + match.getRedScore());
+        listModel.addElement("Blue Alliance Score: " + blueTotal);
+        listModel.addElement("Red Alliance Score: " + redTotal);
         
         //Add scores and include the winning alliance + ranking points + error if not all data has been entered
 

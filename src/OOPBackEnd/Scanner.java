@@ -361,14 +361,15 @@ public class Scanner implements ActionListener{
     
     public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
-        team.addTotalPointsInMatch(matchNumber, TotalPoints);
-        System.out.println("Got Total Points: " + TotalPoints);
+    System.out.println("Storing data for team=" + (team!=null?team.getTeamNumber():"null") + " matchNumber=" + matchNumber +
+        " total=" + TotalPoints + " coral=" + TotalCoralPoints + " algae=" + TotalAlgaePoints);
+    team.addTotalPointsInMatch(matchNumber, TotalPoints);
 
-        team.addTotalCoralPointsInMatch(matchNumber, TotalCoralPoints);
-        System.out.println("Got Coral Points: " + TotalCoralPoints);
+    team.addTotalCoralPointsInMatch(matchNumber, TotalCoralPoints);
 
-        team.addTotalAlgaePointsInMatch(matchNumber, TotalAlgaePoints);
-        System.out.println("Got Algae Points: " + TotalAlgaePoints);
+    team.addTotalAlgaePointsInMatch(matchNumber, TotalAlgaePoints);
+    System.out.println("Stored points for team " + (team!=null?team.getTeamNumber():"null") + " at match " + matchNumber + ": total=" + team.getTotalPointsInMatch(matchNumber) +
+        " coral=" + team.getTotalCoralPointsInMatch(matchNumber) + " algae=" + team.getTotalAlgaePointsInMatch(matchNumber));
 
         team.setCanRemoveAlgae(CanRemoveAlgae);
         System.out.println("Got Can Remove Algae: " + CanRemoveAlgae);
@@ -431,7 +432,7 @@ public class Scanner implements ActionListener{
         // Determine the robot team based on the team number
         for (int i = 0; i < RobotTeam.AllTeams.length; i++) {
             if (RobotTeam.AllTeams[i] != null) {
-                if (RobotTeam.AllTeams[i].getTeamName() == teamName) {
+                if (teamName != null && teamName.equals(RobotTeam.AllTeams[i].getTeamName())) {
                     System.out.println(
                             "Team " + RobotTeam.AllTeams[i].getTeamName() + " found in the directory at index " + i);
                     return RobotTeam.AllTeams[i];
@@ -523,7 +524,7 @@ public class Scanner implements ActionListener{
             JButton skip = new JButton("Use Team Number?");
                 skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
             JPanel panel = new JPanel();
-            panel.add(new JLabel("Team Number: "+ teamNumber + ". Please enter RobotTeam name:"));
+            panel.add(new JLabel("Team Number: "+ teamNumber + ". Please enter team name:"));
             panel.add(teamNameField);
             panel.add(skip);
             frame.add(panel);
@@ -636,13 +637,29 @@ public class Scanner implements ActionListener{
     public static List<Matches> matchesTeamIsIn(RobotTeam team) {
         // Returns an array of Matches that the given RobotTeam is part of
        java.util.List<Matches> teamMatches = new java.util.ArrayList<>();
+        if (team == null) return teamMatches;
+        int teamNum = team.getTeamNumber();
         for (Matches match : Matches.getAllMatches()) {
-            if (match != null) {
-                if (match.getRed1() == team || match.getRed2() == team || match.getRed3() == team ||
-                    match.getBlue1() == team || match.getBlue2() == team || match.getBlue3() == team) {
-                    teamMatches.add(match);
-                }
+            if (match == null) continue;
+            // Compare by team number rather than object identity so deserialized references still match
+            RobotTeam r1 = match.getRed1();
+            RobotTeam r2 = match.getRed2();
+            RobotTeam r3 = match.getRed3();
+            RobotTeam b1 = match.getBlue1();
+            RobotTeam b2 = match.getBlue2();
+            RobotTeam b3 = match.getBlue3();
+            if ((r1 != null && r1.getTeamNumber() == teamNum) ||
+                (r2 != null && r2.getTeamNumber() == teamNum) ||
+                (r3 != null && r3.getTeamNumber() == teamNum) ||
+                (b1 != null && b1.getTeamNumber() == teamNum) ||
+                (b2 != null && b2.getTeamNumber() == teamNum) ||
+                (b3 != null && b3.getTeamNumber() == teamNum)) {
+                teamMatches.add(match);
             }
+        }
+        System.out.println("matchesTeamIsIn: Found " + teamMatches.size() + " matches for team " + (team!=null?team.getTeamNumber():"null"));
+        for (Matches m : teamMatches) {
+            System.out.println(" - match " + m.getMatchNumber());
         }
         return teamMatches;
     }

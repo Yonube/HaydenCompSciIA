@@ -33,8 +33,9 @@ public class ListOfMatches implements Serializable {
             System.err.println("No existing data found or error during deserialization. Starting with an empty list.");
             this.MatchesList = new ArrayList<>();
         }
-        this.MatchesList = new ArrayList<>();
     }
+
+    
 
     // Add a Match to the list
     public void addMatch(Matches match) {

@@ -40,16 +40,21 @@ public class JFreeBarChartPanel extends JPanel {
         return panel;
     }
 
-    public static JFreeBarChartPanel fromMatches(
-            List<Matches> matches, String chartTitle, RobotTeam team) {
+    public static JFreeBarChartPanel fromMatches(List<Matches> matches, String chartTitle, RobotTeam team) {
 
         JFreeBarChartPanel panel = new JFreeBarChartPanel();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        // build dataset from matches here
-
-        
-
+        if (matches != null && team != null) {
+            for (Matches m : matches) {
+                if (m == null) continue;
+                int matchNum = m.getMatchNumber();
+                // sum coral + algae points the team recorded for that match
+                int points = team.getTotalCoralPointsInMatch(matchNum) + team.getTotalAlgaePointsInMatch(matchNum);
+                String category = Integer.toString(matchNum);
+                dataset.addValue(points, "Points", category);
+            }
+        }
         panel.buildChart(dataset, chartTitle,
                 "Match",
                 "Points Scored By Team");
