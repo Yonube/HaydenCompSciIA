@@ -1,63 +1,72 @@
 package src.JavaFXGUI;
+
 import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.RobotTeam;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class MatchGUI implements ActionListener {
+
     private Matches match;
     private JFrame frame;
     private JPanel panel;
     private JLabel matchNumberLabel;
-    @SuppressWarnings("unused")
-    private DefaultListModel<String> listModel;
-    @SuppressWarnings("unused")
-    private JList<String> attributesList;
-    @SuppressWarnings("unused")
-    private JScrollPane scrollPane;
-    @SuppressWarnings("unused")
-    private JButton closeButton;
-    
+
     private final int imageWidth = 50;
     private final int imageHeight = 50;
-    
-    
+
+    // ===== COLORS (Mainapp theme) =====
+    private static final Color BACKGROUND = new Color(30, 30, 30);
+    private static final Color PANEL_BG = new Color(45, 45, 48);
+    private static final Color BORDER = new Color(60, 60, 60);
+    private static final Color TEXT = new Color(230, 230, 230);
+
+    // ===== FONTS =====
+    private static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 40);
+    private static final Font UI_FONT = new Font("Segoe UI", Font.PLAIN, 16);
+
     public MatchGUI(Matches match) {
         this.match = match;
         setupGUI();
     }
 
-    // Simple helper to get coral, algae and total points for a team at a match
     private int[] getTeamPoints(RobotTeam team, int matchNum) {
-        int[] pts = new int[]{0,0,0}; // coral, algae, total
-        if (team == null) return pts;
+        int[] pts = new int[] { 0, 0, 0 };
+        if (team == null)
+            return pts;
         try {
             pts[0] = team.getTotalCoralPointsInMatch(matchNum);
-        } catch (Exception e) { pts[0] = 0; }
+        } catch (Exception e) {
+        }
         try {
             pts[1] = team.getTotalAlgaePointsInMatch(matchNum);
-        } catch (Exception e) { pts[1] = 0; }
+        } catch (Exception e) {
+        }
         pts[2] = pts[0] + pts[1];
         return pts;
     }
 
     public void setupGUI() {
-        // Create the frame
+
         frame = new JFrame("Match Details");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().setBackground(BACKGROUND);
 
-        // Create a panel to hold components
-        panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        panel = new JPanel(new BorderLayout());
+        panel.setBackground(BACKGROUND);
+        frame.add(panel);
 
-        // Add the match number at the top
+        // ===== TITLE =====
         matchNumberLabel = new JLabel("Match Number: " + match.getMatchNumber(), JLabel.CENTER);
-        matchNumberLabel.setFont(new Font("Arial", Font.BOLD, 64));
+        matchNumberLabel.setFont(TITLE_FONT);
+        matchNumberLabel.setForeground(TEXT);
+        matchNumberLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(matchNumberLabel, BorderLayout.NORTH);
 
-        // Create a list to display match attributes
+        // ===== LIST =====
         DefaultListModel<String> listModel = new DefaultListModel<>();
         int mNum = match.getMatchNumber();
         listModel.addElement("Match Number: " + mNum);
@@ -65,233 +74,128 @@ public class MatchGUI implements ActionListener {
         int blueTotal = 0;
         int redTotal = 0;
 
-        // Blue teams
-        if (match.getBlue1() != null) {
-            listModel.addElement("Blue Alliance Team 1: " + match.getBlue1().getTeamNumber());
-            int[] p = getTeamPoints(match.getBlue1(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            blueTotal += p[2];
-        } else {
-            listModel.addElement("Blue Alliance Team 1: null");
+        RobotTeam[] blues = { match.getBlue1(), match.getBlue2(), match.getBlue3() };
+        RobotTeam[] reds = { match.getRed1(), match.getRed2(), match.getRed3() };
+
+        for (int i = 0; i < 3; i++) {
+            if (blues[i] != null) {
+                int[] p = getTeamPoints(blues[i], mNum);
+                listModel.addElement("Blue Team " + (i + 1) + ": " + blues[i].getTeamNumber());
+                listModel.addElement("  Coral: " + p[0]);
+                listModel.addElement("  Algae: " + p[1]);
+                listModel.addElement("  Total: " + p[2]);
+                blueTotal += p[2];
+            }
+            if (reds[i] != null) {
+                int[] p = getTeamPoints(reds[i], mNum);
+                listModel.addElement("Red Team " + (i + 1) + ": " + reds[i].getTeamNumber());
+                listModel.addElement("  Coral: " + p[0]);
+                listModel.addElement("  Algae: " + p[1]);
+                listModel.addElement("  Total: " + p[2]);
+                redTotal += p[2];
+            }
         }
 
-        if (match.getBlue2() != null) {
-            listModel.addElement("Blue Alliance Team 2: " + match.getBlue2().getTeamNumber());
-            int[] p = getTeamPoints(match.getBlue2(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            blueTotal += p[2];
-        } else {
-            listModel.addElement("Blue Alliance Team 2: null");
-        }
-
-        if (match.getBlue3() != null) {
-            listModel.addElement("Blue Alliance Team 3: " + match.getBlue3().getTeamNumber());
-            int[] p = getTeamPoints(match.getBlue3(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            blueTotal += p[2];
-        } else {
-            listModel.addElement("Blue Alliance Team 3: null");
-        }
-
-        // Red teams
-        if (match.getRed1() != null) {
-            listModel.addElement("Red Alliance Team 1: " + match.getRed1().getTeamNumber());
-            int[] p = getTeamPoints(match.getRed1(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            redTotal += p[2];
-        } else {
-            listModel.addElement("Red Alliance Team 1: null");
-        }
-
-        if (match.getRed2() != null) {
-            listModel.addElement("Red Alliance Team 2: " + match.getRed2().getTeamNumber());
-            int[] p = getTeamPoints(match.getRed2(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            redTotal += p[2];
-        } else {
-            listModel.addElement("Red Alliance Team 2: null");
-        }
-
-        if (match.getRed3() != null) {
-            listModel.addElement("Red Alliance Team 3: " + match.getRed3().getTeamNumber());
-            int[] p = getTeamPoints(match.getRed3(), mNum);
-            listModel.addElement("- Coral Points: " + p[0]);
-            listModel.addElement("- Algae Points: " + p[1]);
-            listModel.addElement("- Total Points: " + p[2]);
-            redTotal += p[2];
-        } else {
-            listModel.addElement("Red Alliance Team 3: null");
-        }
-
-        // Update match scores from stored per-team points and display
         match.setBlueScore(blueTotal);
         match.setRedScore(redTotal);
 
-        
+        listModel.addElement("Winning Alliance: " +
+                (blueTotal > redTotal ? "Blue" : redTotal > blueTotal ? "Red" : "Tie"));
+        listModel.addElement("Blue Score: " + blueTotal);
+        listModel.addElement("Red Score: " + redTotal);
 
-        if(blueTotal > redTotal) {
-            listModel.addElement("Winning Alliance: Blue");
-        } else if(redTotal > blueTotal) {
-            listModel.addElement("Winning Alliance: Red");
-        } else {
-            listModel.addElement("Winning Alliance: Tie");
-        }
-        listModel.addElement("Blue Alliance Score: " + blueTotal);
-        listModel.addElement("Red Alliance Score: " + redTotal);
-        
-        //Add scores and include the winning alliance + ranking points + error if not all data has been entered
-
-        // Create a JList to display the list model
         JList<String> matchDetailsList = new JList<>(listModel);
-        matchDetailsList.setFont(new Font("Arial", Font.PLAIN, 16));
+        matchDetailsList.setFont(UI_FONT);
+        matchDetailsList.setBackground(PANEL_BG);
+        matchDetailsList.setForeground(TEXT);
+
         JScrollPane scrollPane = new JScrollPane(matchDetailsList);
+        scrollPane.getViewport().setBackground(PANEL_BG);
+        scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
         panel.add(scrollPane, BorderLayout.WEST);
 
-        // Add a close button at the bottom
+        // ===== CENTER AREA =====
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBackground(BACKGROUND);
+
+        JLabel centerImage = new JLabel(new ImageIcon("src/ImagesAndSerialization/2025_REEFSCAPE.png"));
+        centerImage.setHorizontalAlignment(JLabel.CENTER);
+        centerPanel.add(centerImage, BorderLayout.CENTER);
+
+        // ===== IMAGE PANELS =====
+        JPanel BlueImagePanel = new JPanel();
+        BlueImagePanel.setOpaque(false);
+        BlueImagePanel.setLayout(new BoxLayout(BlueImagePanel, BoxLayout.Y_AXIS));
+        BlueImagePanel.add(Box.createVerticalGlue());
+
+        if (match.getBlue1() != null) {
+            BlueImagePanel.add(createTeamImageLabel(match.getBlue1()));
+            BlueImagePanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        }
+
+        if (match.getBlue2() != null) {
+            BlueImagePanel.add(createTeamImageLabel(match.getBlue2()));
+            BlueImagePanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        }
+
+        if (match.getBlue3() != null) {
+            BlueImagePanel.add(createTeamImageLabel(match.getBlue3()));
+        }
+
+        BlueImagePanel.add(Box.createVerticalGlue());
+
+        JPanel RedImagePanel = new JPanel();
+        RedImagePanel.setOpaque(false);
+        RedImagePanel.setLayout(new BoxLayout(RedImagePanel, BoxLayout.Y_AXIS));
+        RedImagePanel.add(Box.createVerticalGlue());
+
+        if (match.getRed1() != null) {
+            RedImagePanel.add(createTeamImageLabel(match.getRed1()));
+            RedImagePanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        }
+
+        if (match.getRed2() != null) {
+            RedImagePanel.add(createTeamImageLabel(match.getRed2()));
+            RedImagePanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        }
+
+        if (match.getRed3() != null) {
+            RedImagePanel.add(createTeamImageLabel(match.getRed3()));
+        }
+
+        RedImagePanel.add(Box.createVerticalGlue());
+
+        centerPanel.add(BlueImagePanel, BorderLayout.WEST);
+        centerPanel.add(RedImagePanel, BorderLayout.EAST);
+
+        panel.add(centerPanel, BorderLayout.CENTER);
+
+        // ===== CLOSE BUTTON =====
         JButton closeButton = new JButton("Close");
-        closeButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        closeButton.setFont(UI_FONT);
+        closeButton.setBackground(PANEL_BG);
+        closeButton.setForeground(TEXT);
+        closeButton.setFocusPainted(false);
+        closeButton.setBorder(BorderFactory.createLineBorder(BORDER));
         closeButton.addActionListener(e -> frame.dispose());
         panel.add(closeButton, BorderLayout.SOUTH);
 
-        
-        // Create center panel for stuff
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-         // Add image onto center of frame
-    JLabel imageLabel = new JLabel(new ImageIcon("src/ImagesAndSerialization/2025_REEFSCAPE.png")); 
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        centerPanel.add(imageLabel, BorderLayout.CENTER);
-        // Add Red Alliance Images On the Side
-    // Right side (Red) - use BorderLayout so the middle icon sits in the CENTER
-    JPanel RedImagePanel = new JPanel(new BorderLayout());
-    RedImagePanel.setOpaque(false);
-
-    // TOP (Red1)
-    JPanel redTop = new JPanel();
-    redTop.setOpaque(false);
-    redTop.setLayout(new BoxLayout(redTop, BoxLayout.Y_AXIS));
-    if (match.getRed1() != null) {
-        ImageIcon red1Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed1().getTeamNumber() + ".png");
-        if (red1Icon.getIconWidth() == -1) {
-            red1Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImage = red1Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        red1Icon = new ImageIcon(scaledImage);
-        JLabel red1Label = new JLabel(red1Icon);
-        red1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        redTop.add(red1Label);
-        redTop.add(Box.createRigidArea(new Dimension(0,4)));
-    }
-    RedImagePanel.add(redTop, BorderLayout.NORTH);
-
-    // CENTER (Red2) - this will be vertically centered with the center image
-    JPanel redCenter = new JPanel(new GridBagLayout());
-    redCenter.setOpaque(false);
-    if (match.getRed2() != null) {
-        ImageIcon red2Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed2().getTeamNumber() + ".png");
-        if (red2Icon.getIconWidth() == -1) {
-            red2Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImage2 = red2Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        red2Icon = new ImageIcon(scaledImage2);
-        JLabel red2Label = new JLabel(red2Icon);
-        redCenter.add(red2Label); // GridBagLayout centers by default
-    }
-    RedImagePanel.add(redCenter, BorderLayout.CENTER);
-
-    // BOTTOM (Red3)
-    JPanel redBottom = new JPanel();
-    redBottom.setOpaque(false);
-    redBottom.setLayout(new BoxLayout(redBottom, BoxLayout.Y_AXIS));
-    if (match.getRed3() != null) {
-        ImageIcon red3Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getRed3().getTeamNumber() + ".png");
-        if (red3Icon.getIconWidth() == -1) {
-            red3Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImage3 = red3Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        red3Icon = new ImageIcon(scaledImage3);
-        JLabel red3Label = new JLabel(red3Icon);
-        red3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        redBottom.add(Box.createRigidArea(new Dimension(0,4)));
-        redBottom.add(red3Label);
-    }
-    RedImagePanel.add(redBottom, BorderLayout.SOUTH);
-
-    // LEFT side (Blue) - same pattern so Blue middle aligns with center image
-    JPanel BlueImagePanel = new JPanel(new BorderLayout());
-    BlueImagePanel.setOpaque(false);
-
-    JPanel blueTop = new JPanel();
-    blueTop.setOpaque(false);
-    blueTop.setLayout(new BoxLayout(blueTop, BoxLayout.Y_AXIS));
-    if (match.getBlue1() != null) {
-        ImageIcon blue1Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getBlue1().getTeamNumber() + ".png");
-        if (blue1Icon.getIconWidth() == -1) {
-            blue1Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImageB1 = blue1Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        blue1Icon = new ImageIcon(scaledImageB1);
-        JLabel blue1Label = new JLabel(blue1Icon);
-        blue1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        blueTop.add(blue1Label);
-        blueTop.add(Box.createRigidArea(new Dimension(0,4)));
-    }
-    BlueImagePanel.add(blueTop, BorderLayout.NORTH);
-
-    JPanel blueCenter = new JPanel(new GridBagLayout());
-    blueCenter.setOpaque(false);
-    if (match.getBlue2() != null) {
-        ImageIcon blue2Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getBlue2().getTeamNumber() + ".png");
-        if (blue2Icon.getIconWidth() == -1) {
-            blue2Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImageB2 = blue2Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        blue2Icon = new ImageIcon(scaledImageB2);
-        JLabel blue2Label = new JLabel(blue2Icon);
-        blueCenter.add(blue2Label);
-    }
-    BlueImagePanel.add(blueCenter, BorderLayout.CENTER);
-
-    JPanel blueBottom = new JPanel();
-    blueBottom.setOpaque(false);
-    blueBottom.setLayout(new BoxLayout(blueBottom, BoxLayout.Y_AXIS));
-    if (match.getBlue3() != null) {
-        ImageIcon blue3Icon = new ImageIcon("src/ImagesAndSerialization/" + match.getBlue3().getTeamNumber() + ".png");
-        if (blue3Icon.getIconWidth() == -1) {
-            blue3Icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
-        }
-        Image scaledImageB3 = blue3Icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        blue3Icon = new ImageIcon(scaledImageB3);
-        JLabel blue3Label = new JLabel(blue3Icon);
-        blue3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        blueBottom.add(Box.createRigidArea(new Dimension(0,4)));
-        blueBottom.add(blue3Label);
-    }
-    BlueImagePanel.add(blueBottom, BorderLayout.SOUTH);
-
-    // Attach to centerPanel
-    centerPanel.add(RedImagePanel, BorderLayout.EAST);
-    centerPanel.add(BlueImagePanel, BorderLayout.WEST);
-
-    // Add the panel to the frame
-    frame.add(panel);
-    panel.add(centerPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
-    
+
+    private JLabel createTeamImageLabel(RobotTeam team) {
+        ImageIcon icon = new ImageIcon("src/ImagesAndSerialization/" + team.getTeamNumber() + ".png");
+        if (icon.getIconWidth() == -1) {
+            icon = new ImageIcon("src/ImagesAndSerialization/generic.png");
+        }
+        Image scaled = icon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+        JLabel label = new JLabel(new ImageIcon(scaled));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Action performed: " + e.getActionCommand());
-        // Add your logic here to handle the action event
     }
 }

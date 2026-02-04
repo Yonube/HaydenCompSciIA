@@ -8,6 +8,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.chart.plot.PlotOrientation;
+import src.JavaFXGUI.*;
 
 import src.OOPBackEnd.*;
 
@@ -16,7 +17,7 @@ public class JFreeBarChartPanel extends JPanel {
     private JFreeBarChartPanel() {
         setLayout(new BorderLayout());
     }
-    
+
     public static JFreeBarChartPanel fromRobotTeams(
             List<RobotTeam> data, String chartTitle) {
 
@@ -25,7 +26,8 @@ public class JFreeBarChartPanel extends JPanel {
 
         if (data != null) {
             for (RobotTeam rt : data) {
-                if (rt == null) continue;
+                if (rt == null)
+                    continue;
 
                 String key = rt.getTeamNumber() + " - " + rt.getTeamName();
                 int points = rt.getTotalCoralPoints() + rt.getTotalAlgaePoints();
@@ -47,7 +49,8 @@ public class JFreeBarChartPanel extends JPanel {
 
         if (matches != null && team != null) {
             for (Matches m : matches) {
-                if (m == null) continue;
+                if (m == null)
+                    continue;
                 int matchNum = m.getMatchNumber();
                 // sum coral + algae points the team recorded for that match
                 int points = team.getTotalCoralPointsInMatch(matchNum) + team.getTotalAlgaePointsInMatch(matchNum);
@@ -77,6 +80,7 @@ public class JFreeBarChartPanel extends JPanel {
                 true, true, false);
 
         ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setForeground(Mainapp.TEXT);
         chartPanel.setPreferredSize(new Dimension(500, 600));
         add(chartPanel, BorderLayout.CENTER);
     }
