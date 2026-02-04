@@ -6,6 +6,10 @@ public class RobotTeam implements Serializable{
     // Statics
     public static RobotTeam[] AllTeams = new RobotTeam[90];
 
+    // Limits
+    public static final int MAX_TEAM_NUMBER = 999999; // up to 6 digits
+    public static final int MAX_TEAM_NAME_LENGTH = 30;
+
     private int TeamNumber;
     private String TeamName;
 
@@ -39,8 +43,13 @@ public class RobotTeam implements Serializable{
     // private Image TeamImage;
 
     public RobotTeam(int TeamNumber, String TeamName) {
+        // Enforce limits on inputs
+        if (TeamNumber < 0) TeamNumber = 0;
+        if (TeamNumber > MAX_TEAM_NUMBER) TeamNumber = MAX_TEAM_NUMBER;
         this.TeamNumber = TeamNumber;
-        this.TeamName = TeamName;
+        if (TeamName == null) this.TeamName = null;
+        else if (TeamName.length() > MAX_TEAM_NAME_LENGTH) this.TeamName = TeamName.substring(0, MAX_TEAM_NAME_LENGTH);
+        else this.TeamName = TeamName;
         this.Notes = new String[12]; // Assuming 12 matches
         // Initialize arrays
         this.TotalPointsInEachMatch = new int[90];
@@ -62,13 +71,23 @@ public class RobotTeam implements Serializable{
         return TeamNumber;
     }
     public void setTeamNumber(int teamNumber) {
+        if (teamNumber < 0) teamNumber = 0;
+        if (teamNumber > MAX_TEAM_NUMBER) teamNumber = MAX_TEAM_NUMBER;
         TeamNumber = teamNumber;
     }
     public String getTeamName() {
         return TeamName;
     }
     public void setTeamName(String teamName) {
-        TeamName = teamName;
+        if (teamName == null) {
+            TeamName = null;
+            return;
+        }
+        if (teamName.length() > MAX_TEAM_NAME_LENGTH) {
+            TeamName = teamName.substring(0, MAX_TEAM_NAME_LENGTH);
+        } else {
+            TeamName = teamName;
+        }
     }
     public int getWins() {
         return Wins;
@@ -205,7 +224,7 @@ public class RobotTeam implements Serializable{
     public void setNotes(String notes, int matchNumber) {
         for (int i = 0; i < Notes.length; i++) {
             if (Notes[i] == null && notes != null) {
-                Notes[i] = "Match " + matchNumber + " Notes: " + notes;
+                Notes[i] = "- Match " + matchNumber + ": " + notes;
                 break;
             }
         }
@@ -307,5 +326,12 @@ public class RobotTeam implements Serializable{
         System.out.println("Breakdowns: " + getBreakdowns());
         System.out.println("Stuck Game Pieces: " + getStuckGamePieces());
     }
+    
+    // public void recalculateWinsLossesDraws() {
+    //     // Reset wins, losses, draws for all teams in this match
+    //     for (match : this.matchesTeamIsIn())
+    //     // Recalculate based on current scores
+    //     addToWinningTeam();
+    // }
 
 }

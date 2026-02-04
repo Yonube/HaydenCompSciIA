@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.text.*;
 
 import src.OOPBackEnd.ConstantsForScanner;
 
@@ -266,6 +267,61 @@ public class Scanner implements ActionListener{
         if (getScannedData()[ConstantsForScanner.getMoved()] == "true") {
             HasAuton = true;
         }
+        // Climbing and related info (derived from end position)
+        if (getScannedData().length > ConstantsForScanner.getEndPosition()) {
+            String endPos = getScannedData()[ConstantsForScanner.getEndPosition()];
+            System.out.println("Got End Position token: " + endPos);
+            if (endPos != null) {
+            String ep = endPos.trim().toLowerCase();
+            // Accept either short codes (Dc/Sc) or full descriptions ("Low Hang"/"High Hang")
+            if (ep.equals("dc") || ep.equals("low hang") || ep.equals("lowhang")) {
+                // Low hang -> deep climb
+                CanDeepClimb = true;
+                System.out.println("Set CanDeepClimb: " + CanDeepClimb + " (from End Position)");
+            } else if (ep.equals("sc") || ep.equals("high hang") || ep.equals("highhang")) {
+                // High hang -> shallow climb
+                CanShallowClimb = true;
+                System.out.println("Set CanShallowClimb: " + CanShallowClimb + " (from End Position)");
+            } else {
+                // Other values: leave CanDeepClimb/CanShallowClimb unchanged
+                System.out.println("End Position not a hang value, leaving climb flags unchanged.");
+            }
+            }
+        }
+
+        // Can Defend (unchanged behavior)
+        // if (getScannedData().length > ConstantsForScanner.getCanDefend()) {
+        //     CanDefend = "true".equalsIgnoreCase(getScannedData()[ConstantsForScanner.getCanDefend()]);
+        //     System.out.println("Got CanDefend: " + CanDefend);
+        // }
+
+        // // Breakdown / stuck pieces (safely parse ints if present)
+        // if (getScannedData().length > ConstantsForScanner.getBreakdown()) {
+        //     Breakdown = parseIntSafe(getScannedData()[ConstantsForScanner.getBreakdown()]);
+        //     System.out.println("Got Breakdown: " + Breakdown);
+        // }
+        // if (getScannedData().length > ConstantsForScanner.getStuckGamePieces()) {
+        //     StuckGamePieces = parseIntSafe(getScannedData()[ConstantsForScanner.getStuckGamePieces()]);
+        //     System.out.println("Got StuckGamePieces: " + StuckGamePieces);
+        // }
+
+        // Missed / no-show handling (if a flag index exists)
+        if (getScannedData().length > ConstantsForScanner.getNoShow()) {
+            String noShowVal = getScannedData()[ConstantsForScanner.getNoShow()];
+            if ("true".equalsIgnoreCase(noShowVal)) {
+            if (MissedMatches == null) {
+                // allocate a reasonable size if not already allocated
+                MissedMatches = new boolean[Math.max(50, matchNumber + 1)];
+            } else if (matchNumber >= MissedMatches.length) {
+                // grow array to fit the matchNumber
+                boolean[] bigger = new boolean[matchNumber + 1];
+                System.arraycopy(MissedMatches, 0, bigger, 0, MissedMatches.length);
+                MissedMatches = bigger;
+            }
+            MissedMatches[matchNumber] = true;
+            System.out.println("Marked match " + matchNumber + " as missed/no-show for team " + TeamNumber);
+            }
+        }
         // Comments
         if (getScannedData().length < 35) {
             System.out.println("Error: Scanned data is incomplete or no comments provided.");
@@ -397,7 +453,13 @@ public class Scanner implements ActionListener{
         } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B3")) {
             match.setBlue3(Scanner.determineRobotTeam(TeamNumber));
         }
-        match.setIsPopulated(true);
+        //match.setIsPopulated(true);
+        if (match.isFull()) {
+            match.setIsPopulated(true);
+            match.calcBlueScore();
+            match.calcRedScore();
+            match.addToWinningTeam();
+        }
 
     }
 
@@ -500,6 +562,12 @@ public class Scanner implements ActionListener{
             System.out.println("Created new RobotTeam with number: " + teamNumber);
             System.out.println("Please state RobotTeam name: ");
             String input = scanner.nextLine(); // Use the passed Scanner object
+            if (input == null) input = "";
+            input = input.trim();
+            if (input.length() > 30) {
+                System.out.println("Team name exceeds 30 characters; truncating.");
+                input = input.substring(0, 30);
+            }
             newTeam.setTeamName(input);
             System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
@@ -512,6 +580,12 @@ public class Scanner implements ActionListener{
             System.out.println("Created new RobotTeam with number: " + teamNumber);
             System.out.println("Please state RobotTeam name: ");
             String input = scanner.nextLine(); // Use the passed Scanner object
+            if (input == null) input = "";
+            input = input.trim();
+            if (input.length() > 30) {
+                System.out.println("Team name exceeds 30 characters; truncating.");
+                input = input.substring(0, 30);
+            }
             newTeam.setTeamName(input);
             System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
@@ -521,10 +595,14 @@ public class Scanner implements ActionListener{
         if (!checkIfRobotTeamExists(teamNumber)) {
             RobotTeam newTeam = new RobotTeam(teamNumber, null);
             JTextField teamNameField = new JTextField(20);
+            teamNameField.setToolTipText("Maximum 20 characters. Will truncate if exceeded.");
+            if (teamNameField.getText().length() > 20) {
+                teamNameField.setText(teamNameField.getText().substring(0, 20));
+            }
             JButton skip = new JButton("Use Team Number?");
                 skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
             JPanel panel = new JPanel();
-            panel.add(new JLabel("Team Number: "+ teamNumber + ". Please enter team name:"));
+            panel.add(new JLabel("Team Number: "+ teamNumber + ". Team name:"));
             panel.add(teamNameField);
             panel.add(skip);
             frame.add(panel);

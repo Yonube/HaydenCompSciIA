@@ -31,11 +31,12 @@ public class ListOfRobotTeams implements Serializable {
             System.err.println("No existing data found or error during deserialization. Starting with an empty list.");
             this.robotTeams = new ArrayList<>();
         }
-        this.robotTeams = new ArrayList<>();
+        // don't overwrite the deserialized list here - keep whatever was loaded (or the empty list created above)
     }
 
     // Add a RobotTeam to the list
     public void addRobotTeam(RobotTeam team) {
+        if (robotTeams == null) robotTeams = new ArrayList<>();
         robotTeams.add(team);
     }
 
@@ -46,10 +47,10 @@ public class ListOfRobotTeams implements Serializable {
 
     // Serialize all RobotTeams to a single file
     public void serialize() {
+        // Rebuild the list from the canonical AllTeams array to avoid duplicates
+        this.robotTeams = new ArrayList<>();
         for (RobotTeam team : RobotTeam.AllTeams) {
-            if (team != null) {
-                this.robotTeams.add(team);
-            }
+            if (team != null) this.robotTeams.add(team);
         }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             oos.writeObject(this);

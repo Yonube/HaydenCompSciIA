@@ -43,8 +43,8 @@ public class Mainapp {
 		frame.add(panel);
 		panel.setLayout(null);
 
-		titleLabel = new JLabel(" Robotics Scouter App");
-		titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
+		titleLabel = new JLabel(" Scout-O-Matic 3000");
+		titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 40));
 		titleLabel.setForeground(textColor);
 		// titleLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		titleLabel.setBounds(500, 10, 500, 45);

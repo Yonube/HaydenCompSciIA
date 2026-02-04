@@ -5,6 +5,7 @@ import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.Scanner;
 import src.OOPBackEnd.RobotTeam;
 import javax.swing.*;
+import javax.swing.text.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -29,6 +30,13 @@ public class RobotTeamGUI implements ActionListener {
     private int imageWidth;
     private int imageHeight;
 
+
+    //Colors:
+    public static final Color backgroundColor = Color.LIGHT_GRAY;
+    public static final Color textColor = Color.BLACK;
+    public static final Color buttonColor = Color.GREEN;
+
+
     public RobotTeamGUI(RobotTeam robotTeam) {
         this.robotTeam = robotTeam;
         setupGUI();
@@ -46,6 +54,18 @@ public class RobotTeamGUI implements ActionListener {
         listModel.addElement("Stuck Game Pieces: " + robotTeam.getStuckGamePieces());
         listModel.addElement("Total Coral Points: " + robotTeam.getTotalCoralPoints());
         listModel.addElement("Total Algae Points: " + robotTeam.getTotalAlgaePoints());
+        listModel.addElement("Total Points: " + robotTeam.getTotalPoints());
+        listModel.addElement("Can Deep Climb: " + (robotTeam.canDeepClimb() ? "Yes" : "No"));
+        listModel.addElement("Can Shallow Climb: " + (robotTeam.canShallowClimb() ? "Yes" : "No"));
+        listModel.addElement("Can Remove Algae: " + (robotTeam.canRemoveAlgae() ? "Yes" : "No"));
+        listModel.addElement("Has Auton: " + (robotTeam.hasAuton() ? "Yes" : "No"));
+        listModel.addElement("Has Teleop: " + (robotTeam.hasTeleop() ? "Yes" : "No"));
+        listModel.addElement("Notes:");
+        for (String note : robotTeam.getNotes()) {
+            if (note != null && !note.trim().isEmpty()){
+                listModel.addElement(note);
+            }
+        }
         if (attributesList != null) {
             attributesList.setModel(listModel);
         }
@@ -137,22 +157,11 @@ public class RobotTeamGUI implements ActionListener {
         frame.add(panel);
         frame.setVisible(true);
 
-        // Add a key listener for ESC to close the frame
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    frame.dispose(); // Close the frame
-                    return true; // Event consumed
-                }
-                return false; // Event not consumed
-            }
-        });
-
         // Add a close button
         closeButton = new JButton("Close");
         closeButton.setFont(new Font("Arial", Font.PLAIN, 16));
         closeButton.setBounds(350, 500, 100, 30);
+    
         panel.add(closeButton, BorderLayout.SOUTH);
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -176,6 +185,15 @@ public class RobotTeamGUI implements ActionListener {
         JPanel form = new JPanel(new GridLayout(4, 2, 8, 8));
         JTextField numberField = new JTextField(String.valueOf(robotTeam.getTeamNumber()));
         JTextField nameField = new JTextField(robotTeam.getTeamName() != null ? robotTeam.getTeamName() : "");
+        // Enforce input limits at the UI level: team number max 6 digits, team name max 30 chars
+        numberField.setToolTipText("Maximum 6 digits");
+        nameField.setToolTipText("Maximum 30 characters");
+        try {
+            ((AbstractDocument) numberField.getDocument()).setDocumentFilter(new LimitedDocumentFilter(6, true));
+            ((AbstractDocument) nameField.getDocument()).setDocumentFilter(new LimitedDocumentFilter(30, false));
+        } catch (Exception ex) {
+            // In case something goes wrong with document filter (shouldn't), fall back silently
+        }
         JButton imageButton = new JButton("Choose Image");
         JLabel imageLabelSmall = new JLabel("No file chosen");
 
@@ -267,5 +285,54 @@ public class RobotTeamGUI implements ActionListener {
 
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
+    }
+
+    /**
+     * DocumentFilter that limits length and optionally restricts to digits only.
+     */
+    private static class LimitedDocumentFilter extends DocumentFilter {
+        private final int maxLength;
+        private final boolean digitsOnly;
+
+        public LimitedDocumentFilter(int maxLength, boolean digitsOnly) {
+            this.maxLength = maxLength;
+            this.digitsOnly = digitsOnly;
+        }
+
+        private String filterText(String text) {
+            if (text == null) return null;
+            StringBuilder sb = new StringBuilder();
+            for (char c : text.toCharArray()) {
+                if (digitsOnly) {
+                    if (Character.isDigit(c)) sb.append(c);
+                } else {
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        }
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string == null) return;
+            String filtered = filterText(string);
+            int allowed = maxLength - fb.getDocument().getLength();
+            if (allowed <= 0) return;
+            if (filtered.length() > allowed) filtered = filtered.substring(0, allowed);
+            super.insertString(fb, offset, filtered, attr);
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            String filtered = filterText(text);
+            int currentLength = fb.getDocument().getLength();
+            int newLength = currentLength - length + (filtered != null ? filtered.length() : 0);
+            if (newLength > maxLength) {
+                int allowed = maxLength - (currentLength - length);
+                if (allowed <= 0) return;
+                if (filtered.length() > allowed) filtered = filtered.substring(0, allowed);
+            }
+            super.replace(fb, offset, length, filtered, attrs);
+        }
     }
 }

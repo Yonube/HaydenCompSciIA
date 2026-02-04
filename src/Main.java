@@ -22,6 +22,8 @@ public class Main {
             Matches.getAllMatches()[i] = new Matches(i, null, null, null, 0, null, null, null, 0); // Initialize with null values
         }
         mList = new ListOfMatches();
+    // Recompute team records (wins/losses/draws) from stored matches so UI shows correct values
+    ListOfMatches.recomputeAllTeamRecords();
         // Create instances of RobotTeam
 
         // RobotTeam Vector = new RobotTeam(8177, "Vector");

@@ -71,6 +71,14 @@ public class Matches implements Serializable{
         this.BlueScore = BlueScore;
     }
 
+    public void calcBlueScore() {
+        int score = 0;
+        if (Blue1 != null) score += Blue1.getTotalPointsInMatch(matchNumber);
+        if (Blue2 != null) score += Blue2.getTotalPointsInMatch(matchNumber);
+        if (Blue3 != null) score += Blue3.getTotalPointsInMatch(matchNumber);
+        this.BlueScore = score;
+    }
+
     public RobotTeam getRed1() {
         return Red1;
     }
@@ -103,6 +111,13 @@ public class Matches implements Serializable{
         this.RedScore = RedScore;
     }
 
+     public void calcRedScore() {
+        int score = 0;
+        if (Red1 != null) score += Red1.getTotalPointsInMatch(matchNumber);
+        if (Red2 != null) score += Red2.getTotalPointsInMatch(matchNumber);
+        if (Red3 != null) score += Red3.getTotalPointsInMatch(matchNumber);
+        this.RedScore = score;
+    }
     public static int getNumberOfMatchesPlayed() {
         return numberOfMatchesPlayed;
     }
@@ -122,34 +137,69 @@ public class Matches implements Serializable{
         this.isPopulated = isPopulated;
     }
 
-    // Action Commands
-    public void addWinToWinningTeam() {
-        if (BlueScore > RedScore) {
-            // When the blue team wins
-            Blue1.addWin();
-            Blue2.addWin();
-            Blue3.addWin();
-            Red1.addLoss();
-            Red2.addLoss();
-            Red3.addLoss();
-        } else if (RedScore > BlueScore) {
-            // When the red team wins
-            Red1.addWin();
-            Red2.addWin();
-            Red3.addWin();
-            Blue1.addLoss();
-            Blue2.addLoss();
-            Blue3.addLoss();
-        } else {
-            // Handle draw case
-            Blue1.addDraw();
-            Blue2.addDraw();
-            Blue3.addDraw();
-            Red1.addDraw();
-            Red2.addDraw();
-            Red3.addDraw();
+    public boolean isFull(){
+        if (Blue1 == null || Blue2 == null || Blue3 == null || Red1 == null || Red2 == null || Red3 == null) {
+            return false;
         }
-        // Update the total matches played
+        else{
+            return true;
+        }
+    }
+    // Action Commands
+    public void addToWinningTeam() {  
+        if (!isPopulated){
+            return;
+        }
+        else{
+            // Quick Recalc of Scores
+            calcBlueScore();
+            calcRedScore();
+            // Logic Gate
+            // Update canonical RobotTeam instances (lookup by team number) to avoid mutating deserialized copies
+            java.util.function.Function<RobotTeam, RobotTeam> canonical = (t) -> {
+                if (t == null) return null;
+                int tn = t.getTeamNumber();
+                for (RobotTeam rt : RobotTeam.AllTeams) {
+                    if (rt != null && rt.getTeamNumber() == tn) return rt;
+                }
+                return null;
+            };
+
+            RobotTeam cB1 = canonical.apply(Blue1);
+            RobotTeam cB2 = canonical.apply(Blue2);
+            RobotTeam cB3 = canonical.apply(Blue3);
+            RobotTeam cR1 = canonical.apply(Red1);
+            RobotTeam cR2 = canonical.apply(Red2);
+            RobotTeam cR3 = canonical.apply(Red3);
+
+            if (BlueScore > RedScore) {
+                if (cB1 != null) cB1.addWin();
+                if (cB2 != null) cB2.addWin();
+                if (cB3 != null) cB3.addWin();
+                if (cR1 != null) cR1.addLoss();
+                if (cR2 != null) cR2.addLoss();
+                if (cR3 != null) cR3.addLoss();
+            } else if (RedScore > BlueScore) {
+                if (cR1 != null) cR1.addWin();
+                if (cR2 != null) cR2.addWin();
+                if (cR3 != null) cR3.addWin();
+                if (cB1 != null) cB1.addLoss();
+                if (cB2 != null) cB2.addLoss();
+                if (cB3 != null) cB3.addLoss();
+            } else {
+                if (cB1 != null) cB1.addDraw();
+                if (cB2 != null) cB2.addDraw();
+                if (cB3 != null) cB3.addDraw();
+                if (cR1 != null) cR1.addDraw();
+                if (cR2 != null) cR2.addDraw();
+                if (cR3 != null) cR3.addDraw();
+            }
+        }
+        
+
+        // Update the total matches played (count this match once)
         numberOfMatchesPlayed++;
     }
+
+
 }
