@@ -3,7 +3,6 @@ import src.JavaFXGUI.Mainapp;
 import src.OOPBackEnd.ListOfMatches;
 import src.OOPBackEnd.ListOfRobotTeams;
 import src.OOPBackEnd.Matches;
-import src.OOPBackEnd.RobotTeam;
 import src.OOPBackEnd.Scanner;
 
 

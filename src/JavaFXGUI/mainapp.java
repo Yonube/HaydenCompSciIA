@@ -6,7 +6,6 @@ import src.OOPBackEnd.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.*;

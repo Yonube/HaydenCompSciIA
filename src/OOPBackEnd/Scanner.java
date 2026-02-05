@@ -6,14 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.text.*;
 
-import src.OOPBackEnd.ConstantsForScanner;
-
-public class Scanner implements ActionListener{
+public class Scanner implements ActionListener {
     // Scanner class to read input from the QR Code
     // This class will handle the QR code scanning and data extraction
     // It will also handle the conversion of the scanned data into a format that can
@@ -21,11 +17,6 @@ public class Scanner implements ActionListener{
     private static String[] scannedData = new String[35];
 
     private static int TeamNumber;
-
-    private static int Wins;
-    private static int Losses;
-    private static int Draws;
-    private static int TotalMatchesPlayed;
     private static int matchNumber;
 
     private static int Breakdown;
@@ -37,7 +28,6 @@ public class Scanner implements ActionListener{
 
     // Booleans
     private static boolean HasAuton;
-    private static boolean HasTeleop;
     private static boolean CanDeepClimb;
     private static boolean CanShallowClimb;
     private static boolean CanRemoveAlgae;
@@ -62,13 +52,16 @@ public class Scanner implements ActionListener{
 
     // Safely parse integers from scanned strings. Handles values like "3.0"
     private static int parseIntSafe(String s) {
-        if (s == null) return 0;
+        if (s == null)
+            return 0;
         s = s.trim();
-        if (s.length() == 0) return 0;
+        if (s.length() == 0)
+            return 0;
         // If it's a floating representation of an integer like "3.0", strip the decimal
         if (s.endsWith(".0")) {
             s = s.substring(0, s.length() - 2);
-            if (s.length() == 0) return 0;
+            if (s.length() == 0)
+                return 0;
         }
         try {
             return Integer.parseInt(s);
@@ -88,57 +81,58 @@ public class Scanner implements ActionListener{
     }
 
     // public static boolean doesMatchDataExist(int MatchNumber) {
-    //     // Check if the match data exists in any of the matches
-    //     for (Matches match : Matches.getAllMatches()) {
-    //         if (match == null) {
-    //             continue; // Skip null matches
-    //         }
-    //         if (match.getMatchNumber() == MatchNumber) {
-    //             System.out.println("Match data exists for match number: " + MatchNumber);
-    //             return true;
-    //         }
-    //     }
-    //     System.out.println("No match data exists for match number: " + MatchNumber);
-    //     return false;
+    // // Check if the match data exists in any of the matches
+    // for (Matches match : Matches.getAllMatches()) {
+    // if (match == null) {
+    // continue; // Skip null matches
+    // }
+    // if (match.getMatchNumber() == MatchNumber) {
+    // System.out.println("Match data exists for match number: " + MatchNumber);
+    // return true;
+    // }
+    // }
+    // System.out.println("No match data exists for match number: " + MatchNumber);
+    // return false;
     // }
 
     public static void QRdataToRobotTeam(String inputedddata, java.util.Scanner scanner) {
-        Scanner.processScannedData(inputedddata,scanner);
+        Scanner.processScannedData(inputedddata, scanner);
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
         Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
         Scanner.clear();
     }
 
-    public static void FileDataToRobotTeamTSV(String inputedData, JFrame frame){
-        Scanner.processScannedData(inputedData,frame, "tab");
-        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
-        Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
-        Scanner.clear();
-    }
-    public static void FileDataToRobotTeamCSV(String inputedData, JFrame frame){
-        Scanner.processScannedData(inputedData,frame, "comma");
+    public static void FileDataToRobotTeamTSV(String inputedData, JFrame frame) {
+        Scanner.processScannedData(inputedData, frame, "tab");
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
         Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
         Scanner.clear();
     }
 
-    public static void processScannedData(String inputFromQR,java.util.Scanner scanner) {
+    public static void FileDataToRobotTeamCSV(String inputedData, JFrame frame) {
+        Scanner.processScannedData(inputedData, frame, "comma");
+        Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
+        Scanner.sendDataToMatches(Matches.getAllMatches()[matchNumber]);
+        Scanner.clear();
+    }
+
+    public static void processScannedData(String inputFromQR, java.util.Scanner scanner) {
         // Process the scanned data
         System.out.println("Processing scanned data: ");
         // Split the scanned data into an array
         Scanner.setScannedData(inputFromQR.split("\t"));
         System.out.println("Split data");
         // Get match number
-    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+        matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
         // Team Number
-    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+        TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
         // Robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
         System.out.println("Got Robot: " + robot);
         // Create Robot Team if it does not exist (checking is done in the method)
-        Scanner.createNewRobotTeam(TeamNumber,scanner);
+        Scanner.createNewRobotTeam(TeamNumber, scanner);
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
@@ -208,19 +202,18 @@ public class Scanner implements ActionListener{
         Scanner.setScannedData(inputFromQR.split(delimiter));
         System.out.println("Split data");
         // Get match number
-    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+        matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
 
         // Team Number
-    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+        TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
 
         // Robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
         System.out.println("Got Robot: " + robot);
 
-
-        Scanner.createNewRobotTeamGUI(TeamNumber,frame);
+        Scanner.createNewRobotTeamGUI(TeamNumber, frame);
         // If No Show Adds to Missed Matches
         // if (getScannedData()[5].equals("true")) {
         // MissedMatches[matchNumber] = true;
@@ -272,54 +265,58 @@ public class Scanner implements ActionListener{
             String endPos = getScannedData()[ConstantsForScanner.getEndPosition()];
             System.out.println("Got End Position token: " + endPos);
             if (endPos != null) {
-            String ep = endPos.trim().toLowerCase();
-            // Accept either short codes (Dc/Sc) or full descriptions ("Low Hang"/"High Hang")
-            if (ep.equals("dc") || ep.equals("low hang") || ep.equals("lowhang")) {
-                // Low hang -> deep climb
-                CanDeepClimb = true;
-                System.out.println("Set CanDeepClimb: " + CanDeepClimb + " (from End Position)");
-            } else if (ep.equals("sc") || ep.equals("high hang") || ep.equals("highhang")) {
-                // High hang -> shallow climb
-                CanShallowClimb = true;
-                System.out.println("Set CanShallowClimb: " + CanShallowClimb + " (from End Position)");
-            } else {
-                // Other values: leave CanDeepClimb/CanShallowClimb unchanged
-                System.out.println("End Position not a hang value, leaving climb flags unchanged.");
-            }
+                String ep = endPos.trim().toLowerCase();
+                // Accept either short codes (Dc/Sc) or full descriptions ("Low Hang"/"High
+                // Hang")
+                if (ep.equals("dc") || ep.equals("low hang") || ep.equals("lowhang")) {
+                    // Low hang -> deep climb
+                    CanDeepClimb = true;
+                    System.out.println("Set CanDeepClimb: " + CanDeepClimb + " (from End Position)");
+                } else if (ep.equals("sc") || ep.equals("high hang") || ep.equals("highhang")) {
+                    // High hang -> shallow climb
+                    CanShallowClimb = true;
+                    System.out.println("Set CanShallowClimb: " + CanShallowClimb + " (from End Position)");
+                } else {
+                    // Other values: leave CanDeepClimb/CanShallowClimb unchanged
+                    System.out.println("End Position not a hang value, leaving climb flags unchanged.");
+                }
             }
         }
 
         // Can Defend (unchanged behavior)
         // if (getScannedData().length > ConstantsForScanner.getCanDefend()) {
-        //     CanDefend = "true".equalsIgnoreCase(getScannedData()[ConstantsForScanner.getCanDefend()]);
-        //     System.out.println("Got CanDefend: " + CanDefend);
+        // CanDefend =
+        // "true".equalsIgnoreCase(getScannedData()[ConstantsForScanner.getCanDefend()]);
+        // System.out.println("Got CanDefend: " + CanDefend);
         // }
 
         // // Breakdown / stuck pieces (safely parse ints if present)
         // if (getScannedData().length > ConstantsForScanner.getBreakdown()) {
-        //     Breakdown = parseIntSafe(getScannedData()[ConstantsForScanner.getBreakdown()]);
-        //     System.out.println("Got Breakdown: " + Breakdown);
+        // Breakdown =
+        // parseIntSafe(getScannedData()[ConstantsForScanner.getBreakdown()]);
+        // System.out.println("Got Breakdown: " + Breakdown);
         // }
         // if (getScannedData().length > ConstantsForScanner.getStuckGamePieces()) {
-        //     StuckGamePieces = parseIntSafe(getScannedData()[ConstantsForScanner.getStuckGamePieces()]);
-        //     System.out.println("Got StuckGamePieces: " + StuckGamePieces);
+        // StuckGamePieces =
+        // parseIntSafe(getScannedData()[ConstantsForScanner.getStuckGamePieces()]);
+        // System.out.println("Got StuckGamePieces: " + StuckGamePieces);
         // }
 
         // Missed / no-show handling (if a flag index exists)
         if (getScannedData().length > ConstantsForScanner.getNoShow()) {
             String noShowVal = getScannedData()[ConstantsForScanner.getNoShow()];
             if ("true".equalsIgnoreCase(noShowVal)) {
-            if (MissedMatches == null) {
-                // allocate a reasonable size if not already allocated
-                MissedMatches = new boolean[Math.max(50, matchNumber + 1)];
-            } else if (matchNumber >= MissedMatches.length) {
-                // grow array to fit the matchNumber
-                boolean[] bigger = new boolean[matchNumber + 1];
-                System.arraycopy(MissedMatches, 0, bigger, 0, MissedMatches.length);
-                MissedMatches = bigger;
-            }
-            MissedMatches[matchNumber] = true;
-            System.out.println("Marked match " + matchNumber + " as missed/no-show for team " + TeamNumber);
+                if (MissedMatches == null) {
+                    // allocate a reasonable size if not already allocated
+                    MissedMatches = new boolean[Math.max(50, matchNumber + 1)];
+                } else if (matchNumber >= MissedMatches.length) {
+                    // grow array to fit the matchNumber
+                    boolean[] bigger = new boolean[matchNumber + 1];
+                    System.arraycopy(MissedMatches, 0, bigger, 0, MissedMatches.length);
+                    MissedMatches = bigger;
+                }
+                MissedMatches[matchNumber] = true;
+                System.out.println("Marked match " + matchNumber + " as missed/no-show for team " + TeamNumber);
             }
         }
         // Comments
@@ -335,7 +332,7 @@ public class Scanner implements ActionListener{
 
     }
 
-    public static void processScannedData(String[] inputFromFile,java.util.Scanner scanner) {
+    public static void processScannedData(String[] inputFromFile, java.util.Scanner scanner) {
         // Process the scanned data and update the robot's state
         // For example, you might want to parse the scanned data and update the robot's
         // attributes
@@ -343,19 +340,18 @@ public class Scanner implements ActionListener{
         // Split the scanned data into an array
         Scanner.setScannedData(inputFromFile);
         // Get match number
-    matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
+        matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
 
         // Team Number
-    TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
+        TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
 
         // Robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
         System.out.println("Got Robot: " + robot);
 
-
-        Scanner.createNewRobotTeam(TeamNumber,scanner);
+        Scanner.createNewRobotTeam(TeamNumber, scanner);
         // If No Show Adds to Missed Matches
         // if (getScannedData()[5].equals("true")) {
         // MissedMatches[matchNumber] = true;
@@ -414,18 +410,21 @@ public class Scanner implements ActionListener{
         }
 
     }
-    
+
     public static void sendAllDataToTeam(RobotTeam team) {
         // Send all the data to the team
-    System.out.println("Storing data for team=" + (team!=null?team.getTeamNumber():"null") + " matchNumber=" + matchNumber +
-        " total=" + TotalPoints + " coral=" + TotalCoralPoints + " algae=" + TotalAlgaePoints);
-    team.addTotalPointsInMatch(matchNumber, TotalPoints);
+        System.out.println("Storing data for team=" + (team != null ? team.getTeamNumber() : "null") + " matchNumber="
+                + matchNumber +
+                " total=" + TotalPoints + " coral=" + TotalCoralPoints + " algae=" + TotalAlgaePoints);
+        team.addTotalPointsInMatch(matchNumber, TotalPoints);
 
-    team.addTotalCoralPointsInMatch(matchNumber, TotalCoralPoints);
+        team.addTotalCoralPointsInMatch(matchNumber, TotalCoralPoints);
 
-    team.addTotalAlgaePointsInMatch(matchNumber, TotalAlgaePoints);
-    System.out.println("Stored points for team " + (team!=null?team.getTeamNumber():"null") + " at match " + matchNumber + ": total=" + team.getTotalPointsInMatch(matchNumber) +
-        " coral=" + team.getTotalCoralPointsInMatch(matchNumber) + " algae=" + team.getTotalAlgaePointsInMatch(matchNumber));
+        team.addTotalAlgaePointsInMatch(matchNumber, TotalAlgaePoints);
+        System.out.println("Stored points for team " + (team != null ? team.getTeamNumber() : "null") + " at match "
+                + matchNumber + ": total=" + team.getTotalPointsInMatch(matchNumber) +
+                " coral=" + team.getTotalCoralPointsInMatch(matchNumber) + " algae="
+                + team.getTotalAlgaePointsInMatch(matchNumber));
 
         team.setCanRemoveAlgae(CanRemoveAlgae);
         System.out.println("Got Can Remove Algae: " + CanRemoveAlgae);
@@ -453,7 +452,7 @@ public class Scanner implements ActionListener{
         } else if (Scanner.getScannedData()[ConstantsForScanner.getRobot()].equals("B3")) {
             match.setBlue3(Scanner.determineRobotTeam(TeamNumber));
         }
-        //match.setIsPopulated(true);
+        // match.setIsPopulated(true);
         if (match.isFull()) {
             match.setIsPopulated(true);
             match.calcBlueScore();
@@ -519,10 +518,6 @@ public class Scanner implements ActionListener{
             scannedData[i] = null;
         }
         TeamNumber = 0;
-        Wins = 0;
-        Losses = 0;
-        Draws = 0;
-        TotalMatchesPlayed = 0;
         matchNumber = 0;
 
         Breakdown = 0;
@@ -532,6 +527,7 @@ public class Scanner implements ActionListener{
         TotalAlgaePoints = 0;
         TotalPoints = 0;
     }
+
     public static boolean checkIfRobotTeamExists(int teamNumber) {
         // Check if the robot team exists in the directory
         for (RobotTeam team : RobotTeam.AllTeams) {
@@ -543,6 +539,7 @@ public class Scanner implements ActionListener{
         System.out.println("Robot team with number " + teamNumber + " does not exist in the directory.");
         return false;
     }
+
     public static boolean checkIfRobotTeamExists(String teamName) {
         // Check if the robot team exists in the directory
         for (RobotTeam team : RobotTeam.AllTeams) {
@@ -562,34 +559,39 @@ public class Scanner implements ActionListener{
             System.out.println("Created new RobotTeam with number: " + teamNumber);
             System.out.println("Please state RobotTeam name: ");
             String input = scanner.nextLine(); // Use the passed Scanner object
-            if (input == null) input = "";
+            if (input == null)
+                input = "";
             input = input.trim();
             if (input.length() > 30) {
                 System.out.println("Team name exceeds 30 characters; truncating.");
                 input = input.substring(0, 30);
             }
             newTeam.setTeamName(input);
-            System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+            System.out.println(
+                    "New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
     }
 
-    public static void createNewRobotTeam(int teamNumber, String teamName,java.util.Scanner scanner) {
+    public static void createNewRobotTeam(int teamNumber, String teamName, java.util.Scanner scanner) {
         // Create a new RobotTeam if it does not exist
         if (!checkIfRobotTeamExists(teamNumber)) {
             RobotTeam newTeam = new RobotTeam(teamNumber, teamName);
             System.out.println("Created new RobotTeam with number: " + teamNumber);
             System.out.println("Please state RobotTeam name: ");
             String input = scanner.nextLine(); // Use the passed Scanner object
-            if (input == null) input = "";
+            if (input == null)
+                input = "";
             input = input.trim();
             if (input.length() > 30) {
                 System.out.println("Team name exceeds 30 characters; truncating.");
                 input = input.substring(0, 30);
             }
             newTeam.setTeamName(input);
-            System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+            System.out.println(
+                    "New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
         }
     }
+
     public static void createNewRobotTeamGUI(int teamNumber, JFrame frame) {
         // Create a new RobotTeam if it does not exist
         if (!checkIfRobotTeamExists(teamNumber)) {
@@ -600,18 +602,20 @@ public class Scanner implements ActionListener{
                 teamNameField.setText(teamNameField.getText().substring(0, 20));
             }
             JButton skip = new JButton("Use Team Number?");
-                skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
+            skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));
             JPanel panel = new JPanel();
-            panel.add(new JLabel("Team Number: "+ teamNumber + ". Team name:"));
+            panel.add(new JLabel("Team Number: " + teamNumber + ". Team name:"));
             panel.add(teamNameField);
             panel.add(skip);
             frame.add(panel);
 
-            int result = JOptionPane.showConfirmDialog(frame, panel, "New RobotTeam", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(frame, panel, "New RobotTeam", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 newTeam.setTeamName(teamNameField.getText());
-                System.out.println("New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
+                System.out.println(
+                        "New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
             } else {
                 System.out.println("Error in Team Creation.");
             }
@@ -619,30 +623,30 @@ public class Scanner implements ActionListener{
         }
     }
 
-
-    public static RobotTeam[] calculateUpToTop5RobotTeams(){
+    public static RobotTeam[] calculateUpToTop5RobotTeams() {
         // Calculate and return the top 5 RobotTeams based on total points
-        
+
         RobotTeam[] top5Teams = new RobotTeam[5];
         int count = 0; // To keep track of the number of teams added to top5Teams
 
         for (RobotTeam team : RobotTeam.AllTeams) {
             if (team != null) {
-            for (int i = 0; i < top5Teams.length; i++) {
-                if (top5Teams[i] == null || team.getTotalPoints() > top5Teams[i].getTotalPoints()) {
-                // Shift lower ranked teams down
-                for (int j = top5Teams.length - 1; j > i; j--) {
-                    top5Teams[j] = top5Teams[j - 1];
+                for (int i = 0; i < top5Teams.length; i++) {
+                    if (top5Teams[i] == null || team.getTotalPoints() > top5Teams[i].getTotalPoints()) {
+                        // Shift lower ranked teams down
+                        for (int j = top5Teams.length - 1; j > i; j--) {
+                            top5Teams[j] = top5Teams[j - 1];
+                        }
+                        top5Teams[i] = team;
+                        count++;
+                        break;
+                    }
                 }
-                top5Teams[i] = team;
-                count++;
-                break;
-                }
-            }
             }
         }
 
-        // If there are fewer than 5 teams, resize the array to fit the actual number of teams
+        // If there are fewer than 5 teams, resize the array to fit the actual number of
+        // teams
         if (count < 5) {
             RobotTeam[] resizedTopTeams = new RobotTeam[count];
             System.arraycopy(top5Teams, 0, resizedTopTeams, 0, count);
@@ -652,6 +656,7 @@ public class Scanner implements ActionListener{
         System.out.println("Calculated top " + count + " RobotTeams based on total points.");
         return top5Teams;
     }
+
     // Handling TSV Data
     public static String tsvFileToString(String filePath) throws IOException {
         try {
@@ -665,6 +670,7 @@ public class Scanner implements ActionListener{
             throw e; // Re-throw the exception for higher-level handling
         }
     }
+
     public static String[] tsvStringToArray(String tsvData) {
         // Splits the TSV data into an array of strings using tab as the delimiter
         String[] dataArray = tsvData.split("\n");
@@ -686,9 +692,10 @@ public class Scanner implements ActionListener{
             System.out.println("Processing row: " + row);
             // Example: You can call processScannedData or other methods here
             Scanner.QRdataToRobotTeam(row, scanner);
-            
+
         }
     }
+
     // Handling CSV Data
     public static String csvFileToString(String filePath) throws IOException {
         // Creates a Path object for the file
@@ -712,14 +719,18 @@ public class Scanner implements ActionListener{
         String[] rowArray = csvRow.split(",");
         return rowArray;
     }
+
     public static List<Matches> matchesTeamIsIn(RobotTeam team) {
         // Returns an array of Matches that the given RobotTeam is part of
-       java.util.List<Matches> teamMatches = new java.util.ArrayList<>();
-        if (team == null) return teamMatches;
+        java.util.List<Matches> teamMatches = new java.util.ArrayList<>();
+        if (team == null)
+            return teamMatches;
         int teamNum = team.getTeamNumber();
         for (Matches match : Matches.getAllMatches()) {
-            if (match == null) continue;
-            // Compare by team number rather than object identity so deserialized references still match
+            if (match == null)
+                continue;
+            // Compare by team number rather than object identity so deserialized references
+            // still match
             RobotTeam r1 = match.getRed1();
             RobotTeam r2 = match.getRed2();
             RobotTeam r3 = match.getRed3();
@@ -727,15 +738,16 @@ public class Scanner implements ActionListener{
             RobotTeam b2 = match.getBlue2();
             RobotTeam b3 = match.getBlue3();
             if ((r1 != null && r1.getTeamNumber() == teamNum) ||
-                (r2 != null && r2.getTeamNumber() == teamNum) ||
-                (r3 != null && r3.getTeamNumber() == teamNum) ||
-                (b1 != null && b1.getTeamNumber() == teamNum) ||
-                (b2 != null && b2.getTeamNumber() == teamNum) ||
-                (b3 != null && b3.getTeamNumber() == teamNum)) {
+                    (r2 != null && r2.getTeamNumber() == teamNum) ||
+                    (r3 != null && r3.getTeamNumber() == teamNum) ||
+                    (b1 != null && b1.getTeamNumber() == teamNum) ||
+                    (b2 != null && b2.getTeamNumber() == teamNum) ||
+                    (b3 != null && b3.getTeamNumber() == teamNum)) {
                 teamMatches.add(match);
             }
         }
-        System.out.println("matchesTeamIsIn: Found " + teamMatches.size() + " matches for team " + (team!=null?team.getTeamNumber():"null"));
+        System.out.println("matchesTeamIsIn: Found " + teamMatches.size() + " matches for team "
+                + (team != null ? team.getTeamNumber() : "null"));
         for (Matches m : teamMatches) {
             System.out.println(" - match " + m.getMatchNumber());
         }

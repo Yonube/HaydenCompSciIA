@@ -2,12 +2,8 @@ package src.JavaFXGUI.GraphsFolder;
 
 import javax.swing.*;
 import src.JavaFXGUI.*;
-
-import java.awt.Color;
-import java.awt.event.MouseListener;
 import java.util.List;
 import src.OOPBackEnd.RobotTeam;
-import org.jfree.data.general.PieDataset;
 
 public class JFreePieChartPanel extends JPanel {
     public org.jfree.data.general.DefaultPieDataset dataset;
