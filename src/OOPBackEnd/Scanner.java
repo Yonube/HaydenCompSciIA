@@ -596,10 +596,10 @@ public class Scanner implements ActionListener {
         // Create a new RobotTeam if it does not exist
         if (!checkIfRobotTeamExists(teamNumber)) {
             RobotTeam newTeam = new RobotTeam(teamNumber, null);
-            JTextField teamNameField = new JTextField(20);
-            teamNameField.setToolTipText("Maximum 20 characters. Will truncate if exceeded.");
-            if (teamNameField.getText().length() > 20) {
-                teamNameField.setText(teamNameField.getText().substring(0, 20));
+            JTextField teamNameField = new JTextField(15);
+            teamNameField.setToolTipText("Maximum 15 characters. Will truncate if exceeded.");
+            if (teamNameField.getText().length() > 15) {
+                teamNameField.setText(teamNameField.getText().substring(0, 15));
             }
             JButton skip = new JButton("Use Team Number?");
             skip.addActionListener(event -> teamNameField.setText(String.valueOf(teamNumber)));

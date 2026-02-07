@@ -6,6 +6,7 @@ import src.OOPBackEnd.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -119,6 +120,13 @@ public class Mainapp {
 		m_scrollPane.setBounds(0, 50, 300, 800);
 		m_scrollPane.getViewport().setBackground(PANEL_BG);
 		m_scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
+		m_scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.thumbColor = new Color(70, 70, 70); // draggable part
+				this.trackColor = new Color(45, 45, 48); // background track
+			}
+		});
 		panel.add(m_scrollPane);
 
 		for (int i = 1; i < Matches.getAllMatches().length; i++) {

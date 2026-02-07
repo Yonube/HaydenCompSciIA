@@ -13,7 +13,7 @@ public class Matches implements Serializable{
     private RobotTeam Red2;
     private RobotTeam Red3;
     private int RedScore;
-    private static Matches[] allMatches = new Matches[90]; // Placeholder for all matches
+    private static Matches[] allMatches = new Matches[60]; // Placeholder for all matches
     private boolean isPopulated; // Boolean variable to track if the match is populated
 
     public Matches(int matchNumber, RobotTeam Blue1, RobotTeam Blue2, RobotTeam Blue3, int BlueScore,
