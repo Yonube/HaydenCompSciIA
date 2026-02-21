@@ -2,7 +2,7 @@ package src.OOPBackEnd;
 
 import java.io.Serializable;
 
-public class Matches implements Serializable{
+public class Matches implements Serializable {
     private static int numberOfMatchesPlayed = 0;
     private int matchNumber;
     private RobotTeam Blue1;
@@ -39,6 +39,7 @@ public class Matches implements Serializable{
     public void setMatchNumber(int matchNumber) {
         this.matchNumber = matchNumber;
     }
+
     public RobotTeam getBlue1() {
         return Blue1;
     }
@@ -73,9 +74,12 @@ public class Matches implements Serializable{
 
     public void calcBlueScore() {
         int score = 0;
-        if (Blue1 != null) score += Blue1.getTotalPointsInMatch(matchNumber);
-        if (Blue2 != null) score += Blue2.getTotalPointsInMatch(matchNumber);
-        if (Blue3 != null) score += Blue3.getTotalPointsInMatch(matchNumber);
+        if (Blue1 != null)
+            score += Blue1.getTotalPointsInMatch(matchNumber);
+        if (Blue2 != null)
+            score += Blue2.getTotalPointsInMatch(matchNumber);
+        if (Blue3 != null)
+            score += Blue3.getTotalPointsInMatch(matchNumber);
         this.BlueScore = score;
     }
 
@@ -111,13 +115,17 @@ public class Matches implements Serializable{
         this.RedScore = RedScore;
     }
 
-     public void calcRedScore() {
+    public void calcRedScore() {
         int score = 0;
-        if (Red1 != null) score += Red1.getTotalPointsInMatch(matchNumber);
-        if (Red2 != null) score += Red2.getTotalPointsInMatch(matchNumber);
-        if (Red3 != null) score += Red3.getTotalPointsInMatch(matchNumber);
+        if (Red1 != null)
+            score += Red1.getTotalPointsInMatch(matchNumber);
+        if (Red2 != null)
+            score += Red2.getTotalPointsInMatch(matchNumber);
+        if (Red3 != null)
+            score += Red3.getTotalPointsInMatch(matchNumber);
         this.RedScore = score;
     }
+
     public static int getNumberOfMatchesPlayed() {
         return numberOfMatchesPlayed;
     }
@@ -125,6 +133,7 @@ public class Matches implements Serializable{
     public static void setNumberOfMatchesPlayed(int numberOfMatchesPlayed) {
         Matches.numberOfMatchesPlayed = numberOfMatchesPlayed;
     }
+
     public static Matches[] getAllMatches() {
         return allMatches;
     }
@@ -137,69 +146,61 @@ public class Matches implements Serializable{
         this.isPopulated = isPopulated;
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         if (Blue1 == null || Blue2 == null || Blue3 == null || Red1 == null || Red2 == null || Red3 == null) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
+
     // Action Commands
-    public void addToWinningTeam() {  
-        if (!isPopulated){
+    public void addToWinningTeam() {
+        if (!isPopulated) {
             return;
         }
-        else{
-            // Quick Recalc of Scores
-            calcBlueScore();
-            calcRedScore();
-            // Logic Gate
-            // Update canonical RobotTeam instances (lookup by team number) to avoid mutating deserialized copies
-            java.util.function.Function<RobotTeam, RobotTeam> canonical = (t) -> {
-                if (t == null) return null;
-                int tn = t.getTeamNumber();
-                for (RobotTeam rt : RobotTeam.AllTeams) {
-                    if (rt != null && rt.getTeamNumber() == tn) return rt;
-                }
+
+        calcBlueScore();
+        calcRedScore();
+
+        java.util.function.Function<RobotTeam, RobotTeam> canonical = (t) -> {
+            if (t == null)
                 return null;
-            };
-
-            RobotTeam cB1 = canonical.apply(Blue1);
-            RobotTeam cB2 = canonical.apply(Blue2);
-            RobotTeam cB3 = canonical.apply(Blue3);
-            RobotTeam cR1 = canonical.apply(Red1);
-            RobotTeam cR2 = canonical.apply(Red2);
-            RobotTeam cR3 = canonical.apply(Red3);
-
-            if (BlueScore > RedScore) {
-                if (cB1 != null) cB1.addWin();
-                if (cB2 != null) cB2.addWin();
-                if (cB3 != null) cB3.addWin();
-                if (cR1 != null) cR1.addLoss();
-                if (cR2 != null) cR2.addLoss();
-                if (cR3 != null) cR3.addLoss();
-            } else if (RedScore > BlueScore) {
-                if (cR1 != null) cR1.addWin();
-                if (cR2 != null) cR2.addWin();
-                if (cR3 != null) cR3.addWin();
-                if (cB1 != null) cB1.addLoss();
-                if (cB2 != null) cB2.addLoss();
-                if (cB3 != null) cB3.addLoss();
-            } else {
-                if (cB1 != null) cB1.addDraw();
-                if (cB2 != null) cB2.addDraw();
-                if (cB3 != null) cB3.addDraw();
-                if (cR1 != null) cR1.addDraw();
-                if (cR2 != null) cR2.addDraw();
-                if (cR3 != null) cR3.addDraw();
+            int tn = t.getTeamNumber();
+            for (RobotTeam rt : RobotTeam.AllTeams) {
+                if (rt != null && rt.getTeamNumber() == tn)
+                    return rt;
             }
-        }
-        
+            return null;
+        };
 
-        // Update the total matches played (count this match once)
+        RobotTeam[] blueTeams = { canonical.apply(Blue1), canonical.apply(Blue2), canonical.apply(Blue3) };
+        RobotTeam[] redTeams = { canonical.apply(Red1), canonical.apply(Red2), canonical.apply(Red3) };
+
+        if (BlueScore > RedScore) {
+            for (RobotTeam t : blueTeams)
+                if (t != null)
+                    t.addWin();
+            for (RobotTeam t : redTeams)
+                if (t != null)
+                    t.addLoss();
+        } else if (RedScore > BlueScore) {
+            for (RobotTeam t : redTeams)
+                if (t != null)
+                    t.addWin();
+            for (RobotTeam t : blueTeams)
+                if (t != null)
+                    t.addLoss();
+        } else {
+            for (RobotTeam t : blueTeams)
+                if (t != null)
+                    t.addDraw();
+            for (RobotTeam t : redTeams)
+                if (t != null)
+                    t.addDraw();
+        }
+
         numberOfMatchesPlayed++;
     }
-
 
 }

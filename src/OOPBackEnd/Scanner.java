@@ -10,10 +10,7 @@ import java.util.List;
 import javax.swing.*;
 
 public class Scanner implements ActionListener {
-    // Scanner class to read input from the QR Code
-    // This class will handle the QR code scanning and data extraction
-    // It will also handle the conversion of the scanned data into a format that can
-    // be used by the RobotTeam class
+
     private static String[] scannedData = new String[35];
 
     private static int TeamNumber;
@@ -80,21 +77,6 @@ public class Scanner implements ActionListener {
         return TeamNumber;
     }
 
-    // public static boolean doesMatchDataExist(int MatchNumber) {
-    // // Check if the match data exists in any of the matches
-    // for (Matches match : Matches.getAllMatches()) {
-    // if (match == null) {
-    // continue; // Skip null matches
-    // }
-    // if (match.getMatchNumber() == MatchNumber) {
-    // System.out.println("Match data exists for match number: " + MatchNumber);
-    // return true;
-    // }
-    // }
-    // System.out.println("No match data exists for match number: " + MatchNumber);
-    // return false;
-    // }
-
     public static void QRdataToRobotTeam(String inputedddata, java.util.Scanner scanner) {
         Scanner.processScannedData(inputedddata, scanner);
         Scanner.sendAllDataToTeam(Scanner.determineRobotTeam(Scanner.getTeamNumber()));
@@ -125,10 +107,10 @@ public class Scanner implements ActionListener {
         // Get match number
         matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
-        // Team Number
+        // Get Team Number
         TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
-        // Robot
+        // Get robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
         System.out.println("Got Robot: " + robot);
         // Create Robot Team if it does not exist (checking is done in the method)
@@ -189,9 +171,6 @@ public class Scanner implements ActionListener {
     }
 
     public static void processScannedData(String inputFromQR, JFrame frame, String delimiter) {
-        // Process the scanned data and update the robot's state
-        // For example, you might want to parse the scanned data and update the robot's
-        // attributes
         System.out.println("Processing scanned data: ");
         // Split the scanned data into an array
         if (delimiter.equals("tab")) {
@@ -204,20 +183,13 @@ public class Scanner implements ActionListener {
         // Get match number
         matchNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getMatchNumber()]);
         System.out.println(" Got Match Number");
-
         // Team Number
         TeamNumber = parseIntSafe(getScannedData()[ConstantsForScanner.getTeamNumber()]);
         System.out.println("Got Team Number");
-
         // Robot
         String robot = getScannedData()[ConstantsForScanner.getRobot()];
         System.out.println("Got Robot: " + robot);
-
         Scanner.createNewRobotTeamGUI(TeamNumber, frame);
-        // If No Show Adds to Missed Matches
-        // if (getScannedData()[5].equals("true")) {
-        // MissedMatches[matchNumber] = true;
-        // }
         // Coral Points
         TotalCoralPoints =
                 // Auton Coral L1
@@ -572,26 +544,6 @@ public class Scanner implements ActionListener {
         }
     }
 
-    public static void createNewRobotTeam(int teamNumber, String teamName, java.util.Scanner scanner) {
-        // Create a new RobotTeam if it does not exist
-        if (!checkIfRobotTeamExists(teamNumber)) {
-            RobotTeam newTeam = new RobotTeam(teamNumber, teamName);
-            System.out.println("Created new RobotTeam with number: " + teamNumber);
-            System.out.println("Please state RobotTeam name: ");
-            String input = scanner.nextLine(); // Use the passed Scanner object
-            if (input == null)
-                input = "";
-            input = input.trim();
-            if (input.length() > 30) {
-                System.out.println("Team name exceeds 30 characters; truncating.");
-                input = input.substring(0, 30);
-            }
-            newTeam.setTeamName(input);
-            System.out.println(
-                    "New RobotTeam created: " + newTeam.getTeamName() + " with number: " + newTeam.getTeamNumber());
-        }
-    }
-
     public static void createNewRobotTeamGUI(int teamNumber, JFrame frame) {
         // Create a new RobotTeam if it does not exist
         if (!checkIfRobotTeamExists(teamNumber)) {
@@ -657,71 +609,8 @@ public class Scanner implements ActionListener {
         return top5Teams;
     }
 
-    // Handling TSV Data
-    public static String tsvFileToString(String filePath) throws IOException {
-        try {
-            Path file = java.nio.file.Paths.get(filePath);
-            System.out.println("Attempting to read file: " + file.toAbsolutePath());
-            String fileContent = Files.readString(file);
-            System.out.println("Read TSV file content successfully.");
-            return fileContent;
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + filePath);
-            throw e; // Re-throw the exception for higher-level handling
-        }
-    }
-
-    public static String[] tsvStringToArray(String tsvData) {
-        // Splits the TSV data into an array of strings using tab as the delimiter
-        String[] dataArray = tsvData.split("\n");
-        System.out.println("Split TSV data into array.");
-        return dataArray;
-    }
-
-    public static String[] tsvRowToArray(String tsvRow) {
-        // Splits a single TSV row into an array of strings using tab as the delimiter
-        String[] rowArray = tsvRow.split("\t");
-        System.out.println("Split TSV row into array.");
-        return rowArray;
-    }
-
-    public static void processTSVData(File filename, java.util.Scanner scanner) throws IOException {
-        String tsvData = tsvFileToString(filename.getAbsolutePath());
-        String[] rows = tsvStringToArray(tsvData);
-        for (String row : rows) {
-            System.out.println("Processing row: " + row);
-            // Example: You can call processScannedData or other methods here
-            Scanner.QRdataToRobotTeam(row, scanner);
-
-        }
-    }
-
-    // Handling CSV Data
-    public static String csvFileToString(String filePath) throws IOException {
-        // Creates a Path object for the file
-        Path file = Path.of(filePath);
-
-        // Reads the entire content of the file into a single String.
-        // It uses the system's default charset (usually UTF-8).
-        String fileContent = Files.readString(file);
-
-        return fileContent;
-    }
-
-    public static String[] csvStringToArray(String csvData) {
-        // Splits the CSV data into an array of strings using comma as the delimiter
-        String[] dataArray = csvData.split(",");
-        return dataArray;
-    }
-
-    public static String[] csvRowToArray(String csvRow) {
-        // Splits a single CSV row into an array of strings using comma as the delimiter
-        String[] rowArray = csvRow.split(",");
-        return rowArray;
-    }
-
     public static List<Matches> matchesTeamIsIn(RobotTeam team) {
-        // Returns an array of Matches that the given RobotTeam is part of
+        // Returns a list of Matches that the given RobotTeam participated in
         java.util.List<Matches> teamMatches = new java.util.ArrayList<>();
         if (team == null)
             return teamMatches;
@@ -729,20 +618,17 @@ public class Scanner implements ActionListener {
         for (Matches match : Matches.getAllMatches()) {
             if (match == null)
                 continue;
-            // Compare by team number rather than object identity so deserialized references
-            // still match
-            RobotTeam r1 = match.getRed1();
-            RobotTeam r2 = match.getRed2();
-            RobotTeam r3 = match.getRed3();
-            RobotTeam b1 = match.getBlue1();
-            RobotTeam b2 = match.getBlue2();
-            RobotTeam b3 = match.getBlue3();
-            if ((r1 != null && r1.getTeamNumber() == teamNum) ||
-                    (r2 != null && r2.getTeamNumber() == teamNum) ||
-                    (r3 != null && r3.getTeamNumber() == teamNum) ||
-                    (b1 != null && b1.getTeamNumber() == teamNum) ||
-                    (b2 != null && b2.getTeamNumber() == teamNum) ||
-                    (b3 != null && b3.getTeamNumber() == teamNum)) {
+            // Check if team participated in this match by comparing team numbers
+            boolean teamParticipated = false;
+            if ((match.getRed1() != null && match.getRed1().getTeamNumber() == teamNum) ||
+                    (match.getRed2() != null && match.getRed2().getTeamNumber() == teamNum) ||
+                    (match.getRed3() != null && match.getRed3().getTeamNumber() == teamNum) ||
+                    (match.getBlue1() != null && match.getBlue1().getTeamNumber() == teamNum) ||
+                    (match.getBlue2() != null && match.getBlue2().getTeamNumber() == teamNum) ||
+                    (match.getBlue3() != null && match.getBlue3().getTeamNumber() == teamNum)) {
+                teamParticipated = true;
+            }
+            if (teamParticipated) {
                 teamMatches.add(match);
             }
         }

@@ -17,35 +17,19 @@ public class MatchGUI implements ActionListener {
     private final int imageWidth = 50;
     private final int imageHeight = 50;
 
-    // ===== COLORS (Mainapp theme) =====
+    // COLORS
     private static final Color BACKGROUND = new Color(30, 30, 30);
     private static final Color PANEL_BG = new Color(45, 45, 48);
     private static final Color BORDER = new Color(60, 60, 60);
     private static final Color TEXT = new Color(230, 230, 230);
 
-    // ===== FONTS =====
+    // FONTS
     private static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 40);
     private static final Font UI_FONT = new Font("Segoe UI", Font.PLAIN, 16);
 
     public MatchGUI(Matches match) {
         this.match = match;
         setupGUI();
-    }
-
-    private int[] getTeamPoints(RobotTeam team, int matchNum) {
-        int[] pts = new int[] { 0, 0, 0 };
-        if (team == null)
-            return pts;
-        try {
-            pts[0] = team.getTotalCoralPointsInMatch(matchNum);
-        } catch (Exception e) {
-        }
-        try {
-            pts[1] = team.getTotalAlgaePointsInMatch(matchNum);
-        } catch (Exception e) {
-        }
-        pts[2] = pts[0] + pts[1];
-        return pts;
     }
 
     public void setupGUI() {
@@ -59,21 +43,21 @@ public class MatchGUI implements ActionListener {
         panel.setBackground(BACKGROUND);
         frame.add(panel);
 
-        // ===== TITLE =====
+        // TITLE
         matchNumberLabel = new JLabel("Match Number: " + match.getMatchNumber(), JLabel.CENTER);
         matchNumberLabel.setFont(TITLE_FONT);
         matchNumberLabel.setForeground(TEXT);
         matchNumberLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(matchNumberLabel, BorderLayout.NORTH);
 
-        // ===== LIST =====
+        // LIST
         DefaultListModel<String> listModel = new DefaultListModel<>();
         int mNum = match.getMatchNumber();
         listModel.addElement("Match Number: " + mNum);
 
         int blueTotal = 0;
         int redTotal = 0;
-
+        // Create arrays for blue and red teams
         RobotTeam[] blues = { match.getBlue1(), match.getBlue2(), match.getBlue3() };
         RobotTeam[] reds = { match.getRed1(), match.getRed2(), match.getRed3() };
 
@@ -114,7 +98,7 @@ public class MatchGUI implements ActionListener {
         scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
         panel.add(scrollPane, BorderLayout.WEST);
 
-        // ===== CENTER AREA =====
+        // CENTER AREA
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(BACKGROUND);
 
@@ -122,7 +106,8 @@ public class MatchGUI implements ActionListener {
         centerImage.setHorizontalAlignment(JLabel.CENTER);
         centerPanel.add(centerImage, BorderLayout.CENTER);
 
-        // ===== IMAGE PANELS =====
+        // IMAGE PANELS 
+        // Blue
         JPanel BlueImagePanel = new JPanel();
         BlueImagePanel.setOpaque(false);
         BlueImagePanel.setLayout(new BoxLayout(BlueImagePanel, BoxLayout.Y_AXIS));
@@ -144,6 +129,7 @@ public class MatchGUI implements ActionListener {
 
         BlueImagePanel.add(Box.createVerticalGlue());
 
+        // Red
         JPanel RedImagePanel = new JPanel();
         RedImagePanel.setOpaque(false);
         RedImagePanel.setLayout(new BoxLayout(RedImagePanel, BoxLayout.Y_AXIS));
@@ -165,12 +151,13 @@ public class MatchGUI implements ActionListener {
 
         RedImagePanel.add(Box.createVerticalGlue());
 
+        // Put it all together 
         centerPanel.add(BlueImagePanel, BorderLayout.WEST);
         centerPanel.add(RedImagePanel, BorderLayout.EAST);
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        // ===== CLOSE BUTTON =====
+        // CLOSE BUTTON
         JButton closeButton = new JButton("Close");
         closeButton.setFont(UI_FONT);
         closeButton.setBackground(PANEL_BG);
@@ -183,6 +170,8 @@ public class MatchGUI implements ActionListener {
         frame.setVisible(true);
     }
 
+
+    // Additional methods
     private JLabel createTeamImageLabel(RobotTeam team) {
         ImageIcon icon = new ImageIcon("src/ImagesAndSerialization/" + team.getTeamNumber() + ".png");
         if (icon.getIconWidth() == -1) {
@@ -192,6 +181,22 @@ public class MatchGUI implements ActionListener {
         JLabel label = new JLabel(new ImageIcon(scaled));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
+    }
+
+    private int[] getTeamPoints(RobotTeam team, int matchNum) {
+        int[] pts = new int[] { 0, 0, 0 };
+        if (team == null)
+            return pts;
+        try {
+            pts[0] = team.getTotalCoralPointsInMatch(matchNum);
+        } catch (Exception e) {
+        }
+        try {
+            pts[1] = team.getTotalAlgaePointsInMatch(matchNum);
+        } catch (Exception e) {
+        }
+        pts[2] = pts[0] + pts[1];
+        return pts;
     }
 
     @Override

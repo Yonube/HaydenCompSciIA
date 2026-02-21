@@ -35,9 +35,7 @@ public class JFreeBarChartPanel extends JPanel {
             }
         }
 
-        panel.buildChart(dataset, chartTitle,
-                "Robot Team",
-                "Most Points Scored (Coral + Algae)");
+        panel.buildChart(dataset, chartTitle,"Robot Team", "Most Points Scored (Coral + Algae)");
 
         return panel;
     }
@@ -58,18 +56,12 @@ public class JFreeBarChartPanel extends JPanel {
                 dataset.addValue(points, "Points", category);
             }
         }
-        panel.buildChart(dataset, chartTitle,
-                "Match",
-                "Points Scored By Team");
+        panel.buildChart(dataset, chartTitle, "Match", "Points Scored By Team");
 
         return panel;
     }
 
-    private void buildChart(
-            DefaultCategoryDataset dataset,
-            String title,
-            String xLabel,
-            String yLabel) {
+    private void buildChart(DefaultCategoryDataset dataset,String title,String xLabel,String yLabel) {
 
         JFreeChart chart = ChartFactory.createBarChart(
                 title,

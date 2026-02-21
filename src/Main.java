@@ -5,7 +5,6 @@ import src.OOPBackEnd.ListOfRobotTeams;
 import src.OOPBackEnd.Matches;
 import src.OOPBackEnd.Scanner;
 
-
 public class Main {
     public static ListOfRobotTeams rtList;
     public static ListOfMatches mList;
@@ -22,23 +21,10 @@ public class Main {
         }
         mList = new ListOfMatches();
     // Recompute team records (wins/losses/draws) from stored matches so UI shows correct values
-    ListOfMatches.recomputeAllTeamRecords();
-        // Create instances of RobotTeam
+        ListOfMatches.recomputeAllTeamRecords();
 
-        // RobotTeam Vector = new RobotTeam(8177, "Vector");
-        // RobotTeam Robonauts = new RobotTeam(118, "Robonauts");
-        // RobotTeam TexasTorque = new RobotTeam(1477, "TexasTorque");
-        // RobotTeam Valor = new RobotTeam(6800, "Valor");
-        // RobotTeam AwtyBots = new RobotTeam(5829, "AwtyBots");
-        // RobotTeam BlargleFish = new RobotTeam(6369, "BlargleFish");
-        // Removed unused variable Orbit
-
-        // AwtyBots.displayTeamInfo();
-        // Create instances of Matches
-        // Removed unused variable match1
         @SuppressWarnings("unused")
         Mainapp MainGUI = new Mainapp();
-        //AwtyBots.displayTeamInfo();
 
         Scanner.determineRobotTeam(5829);
         Scanner.determineRobotTeam(2389);
@@ -57,14 +43,11 @@ public class Main {
             }
             try {
             Scanner.QRdataToRobotTeam(input, scanner);
-           // AwtyBots.displayTeamInfo();
-           // AwtyBots.checkNotes();
             } catch (Exception e) {
             System.err.println("An error occurred: " + e.getMessage());
             continue;
             }
         }
-        
         try {
             rtList.serialize();
             mList.serialize();

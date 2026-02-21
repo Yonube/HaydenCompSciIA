@@ -215,6 +215,7 @@ public class RobotTeamGUI implements ActionListener {
         // No action currently needed here
     }
 
+    // Actions for the edit button
     private void openEditDialog() {
         JDialog dialog = new JDialog(frame, "Edit Team", true);
         dialog.setSize(400, 300);

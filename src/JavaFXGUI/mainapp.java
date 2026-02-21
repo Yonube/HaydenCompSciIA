@@ -27,11 +27,12 @@ public class Mainapp {
 	private static JButton inputDataButton;
 	private static JTextField inputDataField;
 	private static JButton inputFileButton;
+	private static JButton clearDataButton;
 
 	public static int width = 1500;
 	public static int height = 900;
 
-	// ===== COLORS =====
+	// COLORS
 	public static final Color BACKGROUND = new Color(30, 30, 30);
 	public static final Color PANEL_BG = new Color(45, 45, 48);
 	public static final Color BORDER = new Color(60, 60, 60);
@@ -40,7 +41,7 @@ public class Mainapp {
 	public static final Color BUTTON_IDLE = new Color(45, 45, 48);
 	public static final Color BUTTON_HOVER = new Color(79, 195, 247);
 
-	// ===== FONTS =====
+	// FONTS
 	public static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 40);
 	public static final Font UI_FONT = new Font("Segoe UI", Font.PLAIN, 18);
 	public static final Font LIST_FONT = new Font("Segoe UI", Font.PLAIN, 20);
@@ -52,74 +53,69 @@ public class Mainapp {
 		showMainAppGUI();
 	}
 
+	// Add all the content to the GUI
 	public static void showMainAppGUI() {
 
+		// Main panel
 		panel = new JPanel(null);
 		panel.setBackground(BACKGROUND);
 		panel.setBorder(BorderFactory.createLineBorder(BORDER));
 		frame.add(panel);
 
+		// Title
 		titleLabel = new JLabel(" Scout-O-Matic 3000");
 		titleLabel.setFont(TITLE_FONT);
 		titleLabel.setForeground(TEXT);
 		titleLabel.setBounds(500, 10, 600, 45);
 		panel.add(titleLabel);
 
-		RobotTeam[] topTeams = Scanner.calculateUpToTop5RobotTeams();
-		java.util.List<RobotTeam> topTeamsList = new java.util.ArrayList<>();
-		if (topTeams != null) {
-			for (RobotTeam rt : topTeams) {
-				if (rt != null)
-					topTeamsList.add(rt);
-			}
-		}
+		// Get the top 5 performing teams by total points
+		java.util.List<RobotTeam> topTeamsList = getTopTeamsList();
 
+		// Create the pie chart
 		JFreePieChartPanel centerGraph = new JFreePieChartPanel(topTeamsList, "Top 5 Teams by Total Points");
 		centerGraph.setBounds(320, 60, 780, 600);
 		centerGraph.chart.setBackgroundPaint(BACKGROUND);
 		centerGraph.chartPanel.setBackground(PANEL_BG);
 		panel.add(centerGraph);
 
-		// ===== ROBOT TEAMS PANEL =====
+		// || ROBOT TEAMS PANEL ||
 		robotTeamsPanel = new JPanel();
 		robotTeamsPanel.setLayout(new BoxLayout(robotTeamsPanel, BoxLayout.Y_AXIS));
 		robotTeamsPanel.setBackground(PANEL_BG);
 
+		// Title
 		TitledBorder robotBorder = BorderFactory.createTitledBorder("Robot Teams");
 		robotBorder.setTitleColor(TEXT);
 		robotTeamsPanel.setBorder(robotBorder);
 
+		// Scroll pane for the robot teams panel
 		scrollPane = new JScrollPane(robotTeamsPanel);
 		scrollPane.setBounds(1140, 50, 300, 800);
 		scrollPane.getViewport().setBackground(PANEL_BG);
 		scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
 		panel.add(scrollPane);
 
-		for (RobotTeam robot : RobotTeam.AllTeams) {
-			if (robot == null)
-				continue;
+		// Populate the robot teams panel with buttons leading to their respective robot
+		// team GUIs
+		populateRTPanelWithButtons();
 
-			JButton teamButton = createListButton(
-					robot.getTeamNumber() + " (" + robot.getTeamName() + ")");
-
-			teamButton.addActionListener(e -> new RobotTeamGUI(Scanner.determineRobotTeam(robot.getTeamName())));
-
-			robotTeamsPanel.add(teamButton);
-		}
-
-		// ===== MATCHES PANEL =====
+		// || MATCHES PANEL ||
 		matchesPanel = new JPanel();
 		matchesPanel.setLayout(new BoxLayout(matchesPanel, BoxLayout.Y_AXIS));
 		matchesPanel.setBackground(PANEL_BG);
 
+		// Title for matches panel
 		TitledBorder matchBorder = BorderFactory.createTitledBorder("Matches");
 		matchBorder.setTitleColor(TEXT);
 		matchesPanel.setBorder(matchBorder);
 
+		// Scroll pane for matches panel
 		m_scrollPane = new JScrollPane(matchesPanel);
 		m_scrollPane.setBounds(0, 50, 300, 800);
 		m_scrollPane.getViewport().setBackground(PANEL_BG);
 		m_scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
+		// Attempt to customize scroll bar
 		m_scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
 			@Override
 			protected void configureScrollBarColors() {
@@ -129,31 +125,11 @@ public class Mainapp {
 		});
 		panel.add(m_scrollPane);
 
-		for (int i = 1; i < Matches.getAllMatches().length; i++) {
-			final int matchIndex = i;
+		// Populate the matches panel with buttons leading to their respective match
+		// GUIs
+		populateMPanelWithButtons();
 
-			JButton matchButton = createListButton("Match " + matchIndex);
-
-			if (!Matches.getAllMatches()[matchIndex].getIsPopulated()) {
-				matchButton.setForeground(TEXT_DISABLED);
-			}
-
-			matchButton.addActionListener(e -> {
-				try {
-					new MatchGUI(Matches.getAllMatches()[matchIndex]);
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(
-							frame,
-							"Error opening match.",
-							"Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			});
-
-			matchesPanel.add(matchButton);
-		}
-
-		// ===== TOP BUTTONS =====
+		// TOP BUTTONS
 		refreshButton = createActionButton("Refresh");
 		refreshButton.setBounds(1180, 0, 300, 50);
 		refreshButton.addActionListener(e -> refresh());
@@ -161,31 +137,90 @@ public class Mainapp {
 
 		inputFileButton = createActionButton("Input File");
 		inputFileButton.setBounds(0, 0, 200, 50);
-		inputFileButton.addActionListener(e -> handlefileInput());
+		inputFileButton.addActionListener(e -> handleFileInput());
 		panel.add(inputFileButton);
 
-		// ===== INPUT DATA =====
+		// CLEAR DATA - bottom-left corner
+		clearDataButton = createActionButton("Clear Data");
+		clearDataButton.setBounds(0, height - 50, 200, 40);
+		clearDataButton.addActionListener(e -> {
+			int result = JOptionPane.showConfirmDialog(frame,
+					"Warning: Clearing saved data will delete 'robotteam.data' and 'match.data' and the application will close to clear in-memory data.\n\nDo you want to continue?",
+					"Confirm Clear Data (App will close)",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+			if (result == JOptionPane.YES_OPTION) {
+				// Ensure latest data is serialized before deletion
+				try {
+					if (Main.rtList != null)
+						Main.rtList.serialize();
+					if (Main.mList != null)
+						Main.mList.serialize();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(frame, "Failed to serialize data before clearing: " + ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				// Delete files
+				boolean r1 = true, r2 = true;
+				java.io.File robotFile = new java.io.File("robotteam.data");
+				java.io.File matchFile = new java.io.File("match.data");
+				if (robotFile.exists()) {
+					r1 = robotFile.delete();
+				}
+				if (matchFile.exists()) {
+					r2 = matchFile.delete();
+				}
+				if (r1 && r2) {
+					JOptionPane.showMessageDialog(frame,
+							"Data cleared (files deleted). The application will now close.",
+							"Clear Data", JOptionPane.INFORMATION_MESSAGE);
+				} else if (r1 || r2) {
+					JOptionPane.showMessageDialog(frame,
+							"Partial clear: one of the data files was deleted. The application will now close.",
+							"Clear Data", JOptionPane.WARNING_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(frame,
+							"No data files were found or deletion failed. The application will now close.",
+							"Clear Data", JOptionPane.INFORMATION_MESSAGE);
+				}
+				// Close all windows and exit so in-memory data is cleared
+				java.awt.Window[] windows = java.awt.Window.getWindows();
+				for (java.awt.Window window : windows) {
+					window.dispose();
+				}
+				System.exit(0);
+			}
+		});
+		panel.add(clearDataButton);
+
+		// INPUT DATA - Text Field and Button
 		inputDataField = new JTextField("Paste QR Scout Content Here");
 		inputDataField.setFont(UI_FONT);
 		inputDataField.setBackground(PANEL_BG);
 		inputDataField.setForeground(TEXT);
 		inputDataField.setCaretColor(TEXT);
 		inputDataField.setBorder(BorderFactory.createLineBorder(BORDER));
-		inputDataField.setBounds(300, height - 60, 600, 40);
+		inputDataField.setBounds(300, height - 50, 600, 40);
+		// Clear the text field on focus (when clicked)
 		inputDataField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				inputDataField.setText("");
 			}
 
 			public void focusLost(FocusEvent e) {
-				// nothing
+				if (inputDataField.getText().isEmpty()) {
+					inputDataField.setText("Paste QR Scout Content Here");
+				}
 			}
 		});
 
 		panel.add(inputDataField);
 
 		inputDataButton = createActionButton("Input Data");
-		inputDataButton.setBounds(920, height - 60, 200, 40);
+		inputDataButton.setBounds(920, height - 50, 200, 40);
+		// Commence input data processing
 		inputDataButton.addActionListener(e -> {
 			try {
 				Scanner.FileDataToRobotTeamTSV(inputDataField.getText(), frame);
@@ -196,10 +231,51 @@ public class Mainapp {
 		});
 		panel.add(inputDataButton);
 
+		// Make it seen
 		frame.setVisible(true);
 	}
 
-	// ===== BUTTON FACTORIES =====
+	private static void populateMPanelWithButtons() {
+		for (int i = 1; i < Matches.getAllMatches().length; i++) {
+			final int matchIndex = i;
+
+			JButton matchButton = createListButton("Match " + matchIndex);
+
+			if (!Matches.getAllMatches()[matchIndex].getIsPopulated()) {
+				matchButton.setForeground(TEXT_DISABLED);
+			}
+
+			matchButton.addActionListener(e -> {
+				new MatchGUI(Matches.getAllMatches()[matchIndex]);
+			});
+
+			matchesPanel.add(matchButton);
+		}
+	}
+
+	private static void populateRTPanelWithButtons() {
+		for (RobotTeam robot : RobotTeam.AllTeams) {
+			if (robot == null)
+				continue;
+			JButton teamButton = createListButton(robot.getTeamNumber() + " (" + robot.getTeamName() + ")");
+			teamButton.addActionListener(e -> new RobotTeamGUI(Scanner.determineRobotTeam(robot.getTeamName())));
+			robotTeamsPanel.add(teamButton);
+		}
+	}
+
+	private static java.util.List<RobotTeam> getTopTeamsList() {
+		RobotTeam[] topTeams = Scanner.calculateUpToTop5RobotTeams();
+		java.util.List<RobotTeam> topTeamsList = new java.util.ArrayList<>();
+		if (topTeams != null) {
+			for (RobotTeam rt : topTeams) {
+				if (rt != null)
+					topTeamsList.add(rt);
+			}
+		}
+		return topTeamsList;
+	}
+
+	// BUTTON METHODS
 	private static JButton createListButton(String text) {
 		JButton b = new JButton(text);
 
@@ -240,6 +316,7 @@ public class Mainapp {
 		return b;
 	}
 
+	// Refresh the main application GUI and save data
 	public static void refresh() {
 		frame.getContentPane().removeAll();
 		showMainAppGUI();
@@ -249,7 +326,8 @@ public class Mainapp {
 		Main.mList.serialize();
 	}
 
-	public static void handlefileInput() {
+	// Handle file input for data import
+	public static void handleFileInput() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("TSV/CSV Files", "tsv", "csv",
 				"txt", "xls", "xlsx"));
